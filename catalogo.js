@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
 
             const productos = [
-                { id: 1, nombre: 'Anillo Solitario Diamante', categoria: 'anillos', precio: 890, precioAnterior: null, imagen: 'anillo-01.jpg' },
+                { id: 1, nombre: 'Anillo Solitario Diamante', categoria: 'anillos', precio: 890, precioAnterior: null, imagen: 'anillo-04.jpg' },
                 { id: 2, nombre: 'Anillo Promesa Oro Rosa', categoria: 'anillos', precio: 450, precioAnterior: 550, imagen: 'anillo-02.jpg' },
                 { id: 3, nombre: 'Anillo Eternidad Mini Mouse', categoria: 'anillos', precio: 320, precioAnterior: null, imagen: 'anillo-03.jpg' },
-                { id: 4, nombre: 'Anillo Vintage Zafiro', categoria: 'anillos', precio: 1100, precioAnterior: 1350, imagen: 'anillo-04.jpg' },
+                { id: 4, nombre: 'Anillo Vintage Zafiro', categoria: 'anillos', precio: 1100, precioAnterior: 1350, imagen: 'anillo-01.jpg' },
                 { id: 5, nombre: 'Aretes Perla Natural', categoria: 'aretes', precio: 350, precioAnterior: null, imagen: 'arete-01.jpg' },
                 { id: 6, nombre: 'Aretes Colgantes Oro', categoria: 'aretes', precio: 520, precioAnterior: 620, imagen: 'arete-02.jpg' },
                 { id: 7, nombre: 'Aretes Botón Brillante', categoria: 'aretes', precio: 280, precioAnterior: null, imagen: 'arete-03.jpg' },
