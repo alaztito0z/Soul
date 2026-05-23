@@ -91,15 +91,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.querySelector('.theme-toggle');
     const themeIcon = document.querySelector('.theme-icon');
     if (themeToggle && themeIcon) {
-        themeToggle.addEventListener('click', function() {
-            body.classList.toggle('dark');
-            themeIcon.textContent = body.classList.contains('dark') ? '☀️' : '🌙';
-            localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
-        });
-        if (localStorage.getItem('theme') === 'dark') {
-            body.classList.add('dark');
-            themeIcon.textContent = '☀️';
-        }
+        //themeToggle.addEventListener('click', function() {
+            //body.classList.toggle('dark');
+            //themeIcon.textContent = body.classList.contains('dark') ? '☀️' : '🌙';
+            //localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+        //});
+        //if (localStorage.getItem('theme') === 'dark') {
+            //body.classList.add('dark');
+            //themeIcon.textContent = '☀️';
+        //}
     }
 
     const scrollTopBtn = document.querySelector('.scroll-top');
