@@ -414,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (modal) modal.classList.add('active');
             body.style.overflow = 'hidden';
         } else {
-            if (modalImg) modalImg.src = 'assets/images/producto-destacado/pulsera.jpg';
+            if (modalImg) modalImg.src = 'pulsera.jpg';
             if (modalCategoria) modalCategoria.textContent = 'Tu Carrito';
             if (modalNombre) modalNombre.textContent = cartCount + ' producto' + (cartCount > 1 ? 's' : '');
             if (modalPrecio) modalPrecio.textContent = 'Total estimado: € ' + (cartCount * 1250).toLocaleString();
