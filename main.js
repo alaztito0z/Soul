@@ -404,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function abrirCarrito() {
         restaurarModal();
         if (cartCount === 0) {
-            if (modalImg) modalImg.src = 'assets/images/categorias/anillos.jpg';
+            if (modalImg) modalImg.src = 'anillos.jpg';
             if (modalCategoria) modalCategoria.textContent = '';
             if (modalNombre) modalNombre.textContent = 'Tu carrito está vacío';
             if (modalPrecio) modalPrecio.textContent = '';
