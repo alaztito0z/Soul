@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul - Joyería con Alma</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon/favicon.ico">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+
+<body>
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="loader">
+        <div class="loader-content">
+            <span class="loader-logo">SOUL</span>
+            <div class="loader-line"></div>
+        </div>
+    </div>
+
+    <header class="header">
+        <nav class="navbar">
+            <a href="#" class="logo">SOUL</a>
+            <ul class="nav-menu">
+                <li><a href="#categorias">Categorías</a></li>
+                <li><a href="#destacado">Destacado</a></li>
+                <li><a href="#esencia">Nuestra Esencia</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" aria-label="Cambiar tema">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="user-btn" id="btnUsuarioNav" aria-label="Mi cuenta">
+    <span class="user-icon">👤</span>
+</button>
+                <button class="cart-btn" id="btnCarritoNav" aria-label="Carrito">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count">0</span>
+                </button>
+                <button class="hamburger" aria-label="Abrir menú">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero" id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">SOUL</h1>
+            <p class="hero-subtitle">Joyería con alma propia</p>
+            <a href="#categorias" class="btn btn-outline">Descubrir Colecciones</a>
+        </div>
+        <div class="hero-overlay"></div>
+        <button class="sound-toggle" aria-label="Activar sonido">
+            <span class="sound-icon">🔇</span>
+        </button>
+    </section>
+
+    <section class="section filosofia">
+        <div class="container">
+            <div class="divider"></div>
+            <blockquote class="filosofia-texto">
+                Creemos que cada joya debe tener alma. Piezas que nacen de la emoción, diseñadas para quienes sienten y viven con intensidad. Soul es el reflejo de tu esencia.
+            </blockquote>
+        </div>
+    </section>
+
+    <section class="section categorias" id="categorias">
+        <div class="container">
+            <h2 class="section-title">Categorías</h2>
+            <div class="grid-categorias">
+
+                <a href="catalogo.html?categoria=anillos" class="cat-item">
+                    <img src="assets/images/categorias/anillos.jpg" alt="Anillos Soul" class="cat-img">
+                    <div class="cat-shine"></div>
+                    <div class="cat-overlay">
+                        <h3 class="cat-nombre">Anillos</h3>
+                        <span class="cat-link">Ver Colección</span>
+                    </div>
+                </a>
+
+                <a href="catalogo.html?categoria=aretes" class="cat-item">
+                    <img src="assets/images/categorias/aretes.jpg" alt="Aretes Soul" class="cat-img">
+                    <div class="cat-shine"></div>
+                    <div class="cat-overlay">
+                        <h3 class="cat-nombre">Aretes</h3>
+                        <span class="cat-link">Ver Colección</span>
+                    </div>
+                </a>
+
+                <a href="catalogo.html?categoria=collares" class="cat-item">
+                    <img src="assets/images/categorias/collares.jpg" alt="Collares Soul" class="cat-img">
+                    <div class="cat-shine"></div>
+                    <div class="cat-overlay">
+                        <h3 class="cat-nombre">Collares</h3>
+                        <span class="cat-link">Ver Colección</span>
+                    </div>
+                </a>
+
+                <a href="catalogo.html?categoria=relojes" class="cat-item">
+                    <img src="assets/images/categorias/relojes.jpg" alt="Relojes Soul" class="cat-img">
+                    <div class="cat-shine"></div>
+                    <div class="cat-overlay">
+                        <h3 class="cat-nombre">Relojes</h3>
+                        <span class="cat-link">Ver Colección</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="section destacado" id="destacado">
+        <div class="container destacado-grid">
+            <div class="destacado-img">
+                <img src="assets/images/producto-destacado/pulsera.jpg" alt="Pulsera de plata - Joya destacada Soul">
+                <div class="cat-shine"></div>
+            </div>
+            <div class="destacado-info">
+                <h3 class="destacado-nombre">Pulsera de Plata</h3>
+                <p class="destacado-precio">€ 1.250</p>
+                <p class="destacado-descripcion">Una pulsera capturada en plata y dijes. La pieza que define nuestra temporada.</p>
+                <div class="destacado-actions">
+                    <a href="#" class="btn btn-dorado add-to-cart" data-nombre="Pulsera de Plata" data-precio="1250">Añadir al Carrito</a>
+                    <a href="#" class="btn btn-outline-dark" id="btnMasDetalles">Más Detalles</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section esencia" id="esencia">
+        <div class="container">
+            <h2 class="section-title">Nuestra Esencia</h2>
+            <div class="esencia-grid">
+                <div class="esencia-item">
+                    <div class="esencia-icono">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </div>
+                    <h4>Piedras con Alma</h4>
+                    <p>Gemas certificadas de origen ético, elegidas una a una por su energía única.</p>
+                </div>
+                <div class="esencia-item">
+                    <div class="esencia-icono">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                    </div>
+                    <h4>Manos que Sienten</h4>
+                    <p>Artesanos que ponen el corazón en cada detalle, creando piezas que emocionan.</p>
+                </div>
+                <div class="esencia-item">
+                    <div class="esencia-icono">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h4>Compromiso Eterno</h4>
+                    <p>Cada joya Soul está protegida de por vida. Un vínculo que no se rompe.</p>
+                </div>
+                <div class="esencia-item">
+                    <div class="esencia-icono">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"/>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                        </svg>
+                    </div>
+                    <h4>Tu Historia Única</h4>
+                    <p>Diseñamos piezas personalizadas que narran quién eres y lo que sientes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section testimonios">
+        <div class="container">
+            <div class="testimonio-comillas">❝</div>
+            <blockquote class="testimonio-texto">
+                Soul no crea joyas, crea recuerdos que se llevan en la piel.
+            </blockquote>
+            <img src="assets/images/testimonios/elle-logo.png" alt="" class="testimonio-logo">
+        </div>
+    </section>
+
+    <section class="section contacto" id="contacto">
+        <div class="container contacto-grid">
+            <div class="contacto-info">
+                <h2 class="section-title left">Encuentra tu Soul</h2>
+                <p class="contacto-direccion">Hupermall, Piso 3, local 24.<br>Cochabamba, Bolivia</p>
+                <p class="contacto-telefono">+591 62669099</p>
+                <form class="contacto-form" id="contactoForm">
+                    <div class="form-group">
+                        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Tu email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="mensaje" name="mensaje" rows="4" placeholder="¿Qué joya sueñas?"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-dorado" id="submitBtn">
+                        <span class="btn-text">Solicitar Cita</span>
+                        <span class="btn-loader" style="display:none;">Enviando...</span>
+                    </button>
+                    <p class="form-mensaje" id="formMensaje"></p>
+                </form>
+            </div>
+            <div class="contacto-mapa">
+                <img src="assets/images/about/boutique.jpg" alt="Boutique Soul">
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h4 class="footer-logo">SOUL</h4>
+                <p>Joyería con alma desde siempre.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Categorías</h4>
+                <ul>
+                    <li><a href="#categorias">Anillos</a></li>
+                    <li><a href="#categorias">Aretes</a></li>
+                    <li><a href="#categorias">Collares</a></li>
+                    <li><a href="#categorias">Relojes</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Servicio</h4>
+                <ul>
+                    <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="#contacto">FAQ</a></li>
+                    <li><a href="#contacto">Envíos</a></li>
+                    <li><a href="#contacto">Cuidados</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacidad</a></li>
+                    <li><a href="#">Cookies</a></li>
+                    <li><a href="#">Términos</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Soul. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <button class="scroll-top" aria-label="Volver arriba">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+
+    <div class="sticky-cart" id="stickyCart">
+        <div class="sticky-cart-info">
+            <span class="sticky-cart-text">Tu selección</span>
+            <span class="sticky-cart-count">0 productos</span>
+        </div>
+        <button class="btn btn-dorado btn-sm" id="btnVerCarrito">Ver Carrito</button>
+    </div>
+
+    <div class="modal" id="productoModal">
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Cerrar">&times;</button>
+            <div class="modal-grid">
+                <div class="modal-img">
+                    <img src="" alt="" id="modalImg">
+                </div>
+                <div class="modal-info">
+                    <span class="modal-categoria" id="modalCategoria"></span>
+                    <h3 class="modal-nombre" id="modalNombre"></h3>
+                    <p class="modal-precio" id="modalPrecio"></p>
+                    <p class="modal-descripcion">Cada pieza Soul es única, creada con materiales de la más alta calidad y un diseño que trasciende tendencias.</p>
+                    <button class="btn btn-dorado add-to-cart-modal">Añadir al Carrito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="ambientSound" loop preload="none">
+        <source src="#" type="audio/mpeg">
+    </audio>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

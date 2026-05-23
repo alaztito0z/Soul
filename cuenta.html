@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta - Soul</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon/favicon.ico">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/cuenta.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="loader">
+        <div class="loader-content">
+            <span class="loader-logo">SOUL</span>
+            <div class="loader-line"></div>
+        </div>
+    </div>
+
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.html" class="logo">SOUL</a>
+            <ul class="nav-menu">
+                <li><a href="index.html#categorias">Categorías</a></li>
+                <li><a href="index.html#destacado">Destacado</a></li>
+                <li><a href="index.html#esencia">Nuestra Esencia</a></li>
+                <li><a href="index.html#contacto">Contacto</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" aria-label="Cambiar tema">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="cart-btn" id="btnCarritoNav" aria-label="Carrito">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count">0</span>
+                </button>
+                <button class="user-btn" id="btnUsuarioNav" aria-label="Mi cuenta">
+                    <span class="user-icon">👤</span>
+                </button>
+                <button class="hamburger" aria-label="Abrir menú">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="cuenta-banner">
+        <div class="cuenta-banner-content">
+            <h1>Mi Cuenta</h1>
+            <p>Gestiona tus beneficios Soul</p>
+        </div>
+    </section>
+
+    <section class="section login-section" id="loginSection">
+        <div class="container">
+            <div class="login-card">
+                <h2 class="section-title">Bienvenido a Soul</h2>
+                <p class="login-subtitulo">Inicia sesión con Google para acceder a beneficios exclusivos</p>
+
+                <div class="beneficios-preview">
+                    <div class="beneficio-item">
+                        <span></span>
+                        <p>10% descuento primer pedido</p>
+                    </div>
+                    <div class="beneficio-item">
+                        <span></span>
+                        <p>Puntos por cada compra</p>
+                    </div>
+                    <div class="beneficio-item">
+                        <span></span>
+                        <p>Envío gratis +€500</p>
+                    </div>
+                    <div class="beneficio-item">
+                        <span></span>
+                        <p>Ofertas exclusivas</p>
+                    </div>
+                </div>
+
+                <div id="googleBtnContainer"></div>
+                <p class="login-nota">Solo usamos tu nombre y email. Nunca publicamos sin permiso.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section perfil-section" id="perfilSection" style="display:none;">
+        <div class="container">
+            <div class="perfil-grid">
+                <!-- Sidebar -->
+                <div class="perfil-sidebar">
+                    <div class="perfil-avatar">
+                        <img src="" alt="Avatar" id="perfilAvatar">
+                        <h3 id="perfilNombre"></h3>
+                        <p id="perfilEmail"></p>
+                        <span class="perfil-badge">Cliente VIP</span>
+                    </div>
+                    <ul class="perfil-menu">
+                        <li><a href="#" class="active" data-tab="resumen">📋 Resumen</a></li>
+                        <li><a href="#" data-tab="pedidos"> Mis Pedidos</a></li>
+                        <li><a href="#" data-tab="deseos"> Lista de Deseos</a></li>
+                        <li><a href="#" data-tab="beneficios"> Beneficios</a></li>
+                        <li><a href="#" data-tab="config"> Configuración</a></li>
+                        <li><a href="#" id="btnCerrarSesion"> Cerrar Sesión</a></li>
+                    </ul>
+                </div>
+
+                <div class="perfil-contenido">
+                    <!-- Tab Resumen -->
+                    <div class="perfil-tab active" id="tab-resumen">
+                        <h2>Bienvenido de vuelta</h2>
+                        <div class="resumen-cards">
+                            <div class="resumen-card">
+                                <span class="resumen-icono"></span>
+                                <h3 id="totalPedidos">0</h3>
+                                <p>Pedidos realizados</p>
+                            </div>
+                            <div class="resumen-card">
+                                <span class="resumen-icono"></span>
+                                <h3 id="totalPuntos">0</h3>
+                                <p>Puntos acumulados</p>
+                            </div>
+                            <div class="resumen-card">
+                                <span class="resumen-icono"></span>
+                                <h3 id="nivelCliente">Nuevo</h3>
+                                <p>Nivel de cliente</p>
+                            </div>
+                            <div class="resumen-card">
+                                <span class="resumen-icono"></span>
+                                <h3 id="descuentoActivo">10%</h3>
+                                <p>Descuento activo</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="perfil-tab" id="tab-pedidos">
+                        <h2>Mis Pedidos</h2>
+                        <p class="tab-vacio">Aún no tienes pedidos. ¡Empieza a comprar!</p>
+                        <a href="catalogo.html" class="btn btn-dorado">Ir al Catálogo</a>
+                    </div>
+
+                    <div class="perfil-tab" id="tab-deseos">
+                        <h2>Lista de Deseos</h2>
+                        <p class="tab-vacio">Guarda tus joyas favoritas aquí.</p>
+                        <a href="catalogo.html" class="btn btn-dorado">Explorar Catálogo</a>
+                    </div>
+
+                    <div class="perfil-tab" id="tab-beneficios">
+                        <h2>Tus Beneficios</h2>
+                        <div class="beneficios-lista">
+                            <div class="beneficio-card">
+                                <span></span>
+                                <div>
+                                    <h3>10% Descuento</h3>
+                                    <p>En tu primer pedido</p>
+                                </div>
+                                <span class="beneficio-estado activo">Activo</span>
+                            </div>
+                            <div class="beneficio-card">
+                                <span></span>
+                                <div>
+                                    <h3>Envío Gratis</h3>
+                                    <p>En compras superiores a €500</p>
+                                </div>
+                                <span class="beneficio-estado activo">Activo</span>
+                            </div>
+                            <div class="beneficio-card">
+                                <span></span>
+                                <div>
+                                    <h3>Puntos Soul</h3>
+                                    <p>Acumula 1 punto por cada €10 gastados</p>
+                                </div>
+                                <span class="beneficio-estado activo">Activo</span>
+                            </div>
+                            <div class="beneficio-card">
+                                <span></span>
+                                <div>
+                                    <h3>Acceso Anticipado</h3>
+                                    <p>A nuevas colecciones antes que nadie</p>
+                                </div>
+                                <span class="beneficio-estado activo">Activo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="perfil-tab" id="tab-config">
+                        <h2>Configuración</h2>
+                        <div class="config-form">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input type="text" id="configNombre" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="configEmail" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Teléfono</label>
+                                <input type="tel" id="configTelefono" placeholder="Añade tu teléfono">
+                            </div>
+                            <div class="form-group">
+                                <label>Dirección de envío</label>
+                                <textarea id="configDireccion" rows="3" placeholder="Añade tu dirección"></textarea>
+                            </div>
+                            <button class="btn btn-dorado" id="btnGuardarConfig">Guardar Cambios</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h4 class="footer-logo">SOUL</h4>
+                <p>Joyería con alma desde 2018.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Categorías</h4>
+                <ul>
+                    <li><a href="catalogo.html?categoria=anillos">Anillos</a></li>
+                    <li><a href="catalogo.html?categoria=aretes">Aretes</a></li>
+                    <li><a href="catalogo.html?categoria=collares">Collares</a></li>
+                    <li><a href="catalogo.html?categoria=relojes">Relojes</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Servicio</h4>
+                <ul>
+                    <li><a href="cuenta.html">Mi Cuenta</a></li>
+                    <li><a href="index.html#contacto">Contacto</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Envíos</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacidad</a></li>
+                    <li><a href="#">Cookies</a></li>
+                    <li><a href="#">Términos</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Soul. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <button class="scroll-top" aria-label="Volver arriba">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+
+    <div class="modal" id="carritoModal">
+        <div class="modal-content modal-carrito">
+            <button class="modal-close" id="cerrarCarrito">&times;</button>
+            <h2 class="modal-titulo-carrito">🛒 Tu Carrito</h2>
+            <div class="carrito-cuerpo" id="carritoCuerpo"></div>
+            <div class="carrito-footer">
+                <button class="btn btn-dorado" id="btnFinalizarPedido">Finalizar Pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/shared.js"></script>
+    <script src="js/cuenta.js"></script>
+</body>
+
+</html>

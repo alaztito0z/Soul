@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo - Soul</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon/favicon.ico">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/catalogo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="loader">
+        <div class="loader-content">
+            <span class="loader-logo">SOUL</span>
+            <div class="loader-line"></div>
+        </div>
+    </div>
+
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.html" class="logo">SOUL</a>
+            <ul class="nav-menu">
+                <li><a href="index.html#categorias">Categorías</a></li>
+                <li><a href="index.html#destacado">Destacado</a></li>
+                <li><a href="index.html#esencia">Nuestra Esencia</a></li>
+                <li><a href="index.html#contacto">Contacto</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" aria-label="Cambiar tema">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="user-btn" id="btnUsuarioNav" aria-label="Mi cuenta">
+    <span class="user-icon">👤</span>
+</button>
+                <button class="cart-btn" id="btnCarritoNav" aria-label="Carrito">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count">0</span>
+                </button>
+                <button class="hamburger" aria-label="Abrir menú">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="catalogo-banner">
+        <div class="catalogo-banner-content">
+            <h1>Nuestro Catálogo</h1>
+            <p>Descubre la colección completa de Soul</p>
+        </div>
+    </section>
+
+    <section class="filtros-bar">
+        <div class="container">
+            <div class="filtros-wrapper">
+                <div class="filtro-group">
+                    <button class="filtro-btn active" data-categoria="todos">Todos</button>
+                    <button class="filtro-btn" data-categoria="anillos">Anillos</button>
+                    <button class="filtro-btn" data-categoria="aretes">Aretes</button>
+                    <button class="filtro-btn" data-categoria="collares">Collares</button>
+                    <button class="filtro-btn" data-categoria="relojes">Relojes</button>
+                    <button class="filtro-btn" data-categoria="ofertas"> Ofertas</button>
+                </div>
+                <div class="ordenar-group">
+                    <label>Ordenar:</label>
+                    <select id="ordenSelect">
+                        <option value="default">Destacados</option>
+                        <option value="precio-asc">Precio: Menor a Mayor</option>
+                        <option value="precio-desc">Precio: Mayor a Menor</option>
+                        <option value="nombre-asc">Nombre: A-Z</option>
+                        <option value="nombre-desc">Nombre: Z-A</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="catalogo-grid-section">
+        <div class="container">
+            <div class="catalogo-grid" id="catalogoGrid"></div>
+            <p class="no-resultados" id="noResultados" style="display:none;">No se encontraron productos con esos filtros.</p>
+        </div>
+    </section>
+
+    <section class="ofertas-especiales" id="ofertas">
+        <div class="container">
+            <h2 class="section-title"> Ofertas Especiales</h2>
+            <p class="ofertas-subtitulo">Precios especiales por tiempo limitado</p>
+            <div class="ofertas-grid" id="ofertasGrid"></div>
+        </div>
+    </section>
+
+    <section class="recomendaciones">
+        <div class="container">
+            <h2 class="section-title">Combínalo Perfecto</h2>
+            <p class="recomendaciones-subtitulo">Nuestras sugerencias para un look completo</p>
+            <div class="combos-grid">
+                <div class="combo-card">
+                    <div class="combo-imagenes">
+                        <img src="assets/images/productos/anillo-01.jpg" alt="Anillo">
+                        <span class="combo-mas">+</span>
+                        <img src="assets/images/productos/collar-01.jpg" alt="Collar">
+                    </div>
+                    <div class="combo-info">
+                        <h3>Set "Luz de Luna"</h3>
+                        <p>Anillo Solitario + Collar Delicado</p>
+                        <div class="combo-precios">
+                            <span class="combo-precio-original">€ 950</span>
+                            <span class="combo-precio-oferta">€ 799</span>
+                        </div>
+                        <button class="btn btn-dorado btn-sm add-combo">Añadir Set</button>
+                    </div>
+                </div>
+                <div class="combo-card">
+                    <div class="combo-imagenes">
+                        <img src="assets/images/productos/arete-01.jpg" alt="Aretes">
+                        <span class="combo-mas">+</span>
+                        <img src="assets/images/productos/reloj-01.jpg" alt="Reloj">
+                    </div>
+                    <div class="combo-info">
+                        <h3>Set "Elegancia Total"</h3>
+                        <p>Aretes Perla + Reloj Minimalista</p>
+                        <div class="combo-precios">
+                            <span class="combo-precio-original">€ 1.290</span>
+                            <span class="combo-precio-oferta">€ 1.090</span>
+                        </div>
+                        <button class="btn btn-dorado btn-sm add-combo">Añadir Set</button>
+                    </div>
+                </div>
+                <div class="combo-card">
+                    <div class="combo-imagenes">
+                        <img src="assets/images/productos/anillo-02.jpg" alt="Anillo">
+                        <span class="combo-mas">+</span>
+                        <img src="assets/images/productos/arete-02.jpg" alt="Aretes">
+                        <span class="combo-mas">+</span>
+                        <img src="assets/images/productos/collar-02.jpg" alt="Collar">
+                    </div>
+                    <div class="combo-info">
+                        <h3>Set "Trilogía Dorada"</h3>
+                        <p>Anillo + Aretes + Collar a juego</p>
+                        <div class="combo-precios">
+                            <span class="combo-precio-original">€ 1.850</span>
+                            <span class="combo-precio-oferta">€ 1.499</span>
+                        </div>
+                        <button class="btn btn-dorado btn-sm add-combo">Añadir Set</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h4 class="footer-logo">SOUL</h4>
+                <p>Joyería con alma desde 2018.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Categorías</h4>
+                <ul>
+                    <li><a href="catalogo.html?categoria=anillos">Anillos</a></li>
+                    <li><a href="catalogo.html?categoria=aretes">Aretes</a></li>
+                    <li><a href="catalogo.html?categoria=collares">Collares</a></li>
+                    <li><a href="catalogo.html?categoria=relojes">Relojes</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Servicio</h4>
+                <ul>
+                    <li><a href="index.html#contacto">Contacto</a></li>
+                    <li><a href="index.html#contacto">FAQ</a></li>
+                    <li><a href="index.html#contacto">Envíos</a></li>
+                    <li><a href="index.html#contacto">Cuidados</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacidad</a></li>
+                    <li><a href="#">Cookies</a></li>
+                    <li><a href="#">Términos</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Soul. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <button class="scroll-top" aria-label="Volver arriba">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+
+    <div class="modal" id="productoModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalCloseBtn">&times;</button>
+            <div class="modal-grid">
+                <div class="modal-img">
+                    <img src="" alt="" id="modalImg">
+                </div>
+                <div class="modal-info">
+                    <span class="modal-categoria" id="modalCategoria"></span>
+                    <h3 class="modal-nombre" id="modalNombre"></h3>
+                    <p class="modal-precio" id="modalPrecio"></p>
+                    <p class="modal-descripcion">Cada pieza Soul es única, creada con materiales de la más alta calidad y un diseño que trasciende tendencias.</p>
+                    <button class="btn btn-dorado" id="modalAddToCart">Añadir al Carrito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="carritoModal">
+        <div class="modal-content modal-carrito">
+            <button class="modal-close" id="cerrarCarrito">&times;</button>
+            <h2 class="modal-titulo-carrito">🛒 Tu Carrito</h2>
+            <div class="carrito-cuerpo" id="carritoCuerpo"></div>
+            <div class="carrito-footer">
+                <button class="btn btn-dorado" id="btnFinalizarPedido">Finalizar Pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/shared.js"></script>
+    <script src="js/catalogo.js"></script>
+</body>
+
+</html>

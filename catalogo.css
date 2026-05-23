@@ -1,0 +1,514 @@
+.catalogo-banner {
+    height: 40vh;
+    min-height: 300px;
+    background-color: var(--color-dark-soft);
+    background-image: url('../assets/images/hero/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+}
+
+.catalogo-banner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.catalogo-banner-content {
+    position: relative;
+    z-index: 1;
+    color: var(--color-white);
+}
+
+.catalogo-banner-content h1 {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    font-weight: 400;
+    letter-spacing: 6px;
+}
+
+.catalogo-banner-content p {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    margin-top: var(--spacing-xs);
+    color: var(--color-gold);
+}
+
+.filtros-bar {
+    background-color: var(--color-white);
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid rgba(184, 155, 114, 0.15);
+    position: sticky;
+    top: 70px;
+    z-index: 100;
+}
+
+.filtros-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.filtro-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filtro-btn {
+    padding: 8px 18px;
+    border: 1px solid rgba(184, 155, 114, 0.3);
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--color-gray);
+    transition: all var(--transition);
+}
+
+.filtro-btn:hover {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+}
+
+.filtro-btn.active {
+    background-color: var(--color-gold);
+    color: var(--color-white);
+    border-color: var(--color-gold);
+}
+
+.ordenar-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ordenar-group label {
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-gray);
+}
+
+.ordenar-group select {
+    padding: 8px 14px;
+    border: 1px solid rgba(184, 155, 114, 0.3);
+    background: var(--color-cream);
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    color: var(--color-dark);
+    cursor: pointer;
+    outline: none;
+}
+
+.catalogo-grid-section {
+    padding: var(--spacing-lg) 0;
+    background-color: var(--color-cream);
+}
+
+.catalogo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.producto-card {
+    background-color: var(--color-white);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.producto-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.producto-card-img {
+    aspect-ratio: 3/4;
+    overflow: hidden;
+}
+
+.producto-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.producto-card:hover .producto-card-img img {
+    transform: scale(1.05);
+}
+
+.producto-card-body {
+    padding: var(--spacing-sm);
+}
+
+.producto-card-categoria {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-gold);
+    margin-bottom: 4px;
+}
+
+.producto-card-nombre {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--color-dark);
+    margin-bottom: 8px;
+}
+
+.producto-card-precio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.precio-actual {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-dark);
+}
+
+.precio-anterior {
+    font-size: 0.8rem;
+    color: #C0392B;
+    text-decoration: line-through;
+}
+
+.producto-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: var(--spacing-sm);
+}
+
+.btn-card {
+    flex: 1;
+    padding: 10px;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid var(--color-gold);
+    background: transparent;
+    color: var(--color-gold);
+    font-family: var(--font-sans);
+    transition: all var(--transition);
+}
+
+.btn-card:hover {
+    background-color: var(--color-gold);
+    color: var(--color-white);
+}
+
+.no-resultados {
+    text-align: center;
+    padding: var(--spacing-xl) 0;
+    color: var(--color-gray);
+    font-size: 1rem;
+}
+
+.ofertas-especiales {
+    padding: var(--spacing-xl) 0;
+    background-color: var(--color-white);
+}
+
+.ofertas-subtitulo {
+    text-align: center;
+    color: var(--color-gray);
+    font-size: 0.9rem;
+    margin-top: -15px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.ofertas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.oferta-card {
+    position: relative;
+    background-color: var(--color-cream);
+    overflow: hidden;
+}
+
+.oferta-img {
+    aspect-ratio: 1/1;
+    overflow: hidden;
+}
+
+.oferta-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.oferta-card:hover .oferta-img img {
+    transform: scale(1.05);
+}
+
+.oferta-tag {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #C0392B;
+    color: var(--color-white);
+    padding: 6px 14px;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    z-index: 2;
+}
+
+.oferta-info {
+    padding: var(--spacing-sm);
+    text-align: center;
+}
+
+.oferta-info h3 {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+}
+
+.oferta-precio {
+    margin-top: 5px;
+}
+
+.oferta-precio .precio-anterior {
+    font-size: 0.8rem;
+    margin-right: 8px;
+}
+
+.oferta-precio .precio-actual {
+    font-size: 1.1rem;
+    color: var(--color-gold);
+}
+
+.recomendaciones {
+    padding: var(--spacing-xl) 0;
+    background-color: var(--color-cream);
+}
+
+.recomendaciones-subtitulo {
+    text-align: center;
+    color: var(--color-gray);
+    font-size: 0.9rem;
+    margin-top: -15px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.combos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+}
+
+.combo-card {
+    background-color: var(--color-white);
+    padding: var(--spacing-md);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.combo-card:hover {
+    transform: translateY(-3px);
+}
+
+.combo-imagenes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.combo-imagenes img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--color-gold);
+}
+
+.combo-mas {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    color: var(--color-gold);
+}
+
+.combo-info h3 {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.combo-info p {
+    font-size: 0.8rem;
+    color: var(--color-gray);
+    margin-bottom: var(--spacing-sm);
+}
+
+.combo-precios {
+    margin-bottom: var(--spacing-sm);
+}
+
+.combo-precio-original {
+    font-size: 0.85rem;
+    color: #C0392B;
+    text-decoration: line-through;
+    margin-right: 8px;
+}
+
+.combo-precio-oferta {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    color: var(--color-gold);
+    font-weight: 700;
+}
+
+.modal-carrito {
+    max-width: 500px;
+    padding: var(--spacing-lg);
+    text-align: center;
+}
+
+.modal-titulo-carrito {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-dark);
+}
+
+.carrito-cuerpo {
+    text-align: left;
+    margin-bottom: var(--spacing-md);
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.carrito-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(184, 155, 114, 0.2);
+}
+
+.carrito-item-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.carrito-item-img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.carrito-item-nombre {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--color-dark);
+}
+
+.carrito-item-precio {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-gold);
+    margin-right: 10px;
+}
+
+.carrito-item-eliminar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 5px;
+    transition: opacity 0.3s;
+}
+
+.carrito-item-eliminar:hover {
+    opacity: 0.6;
+}
+
+.carrito-vacio {
+    text-align: center;
+    padding: var(--spacing-lg);
+    color: var(--color-gray);
+    font-size: 1rem;
+}
+
+.carrito-vacio-icono {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: var(--spacing-sm);
+}
+
+.carrito-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-top: 2px solid var(--color-gold);
+    margin-top: 10px;
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    color: var(--color-dark);
+}
+
+.carrito-total-precio {
+    color: var(--color-gold);
+    font-weight: 700;
+}
+
+.carrito-footer {
+    margin-top: var(--spacing-sm);
+}
+
+@media (max-width: 768px) {
+    .catalogo-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .ofertas-grid {
+        grid-template-columns: 1fr;
+    }
+    .combos-grid {
+        grid-template-columns: 1fr;
+    }
+    .filtros-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .filtros-bar {
+        top: 60px;
+    }
+    .catalogo-banner-content h1 {
+        font-size: 2rem;
+    }
+    .modal-carrito {
+        width: 95%;
+        padding: var(--spacing-md);
+    }
+}
