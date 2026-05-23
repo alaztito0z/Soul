@@ -129,5 +129,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    console.log('✨ Soul Cuenta cargado.');
+    console.log(' Soul Cuenta cargado.');
 });
