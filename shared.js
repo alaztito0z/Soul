@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.actualizarCarrito = function(nombre, precio, imagen) {
         const exist = cartItems.find(i => i.nombre === nombre);
         if (exist) exist.cantidad++;
-        else cartItems.push({ nombre, precio, imagen: imagen || 'assets/images/productos/anillo-01.jpg', cantidad: 1 });
+        else cartItems.push({ nombre, precio, imagen: imagen || 'anillo-01.jpg', cantidad: 1 });
         cartCount++;
         guardar();
         updateUI();
