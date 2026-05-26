@@ -35,7 +35,6 @@ loginForm.addEventListener('submit', async (e) => {
     
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        loginError.textContent = 'Verificando permisos...';
         const adminQuery = query(collection(db, 'admins'), where('uid', '==', userCredential.user.uid));
         const adminSnapshot = await getDocs(adminQuery);
         
@@ -62,18 +61,11 @@ document.getElementById('btnLogout').addEventListener('click', async () => {
     dashboard.style.display = 'none';
 });
 
-onAuthStateChanged(auth, (user) => {
-    if (!user && dashboard.style.display === 'flex') {
-        dashboard.style.display = 'none';
-        loginScreen.style.display = 'flex';
-    }
-});
-
 function initDashboard() {
     loadProductos();
     loadPedidos();
     setupNavigation();
-    setupProductoForm();
+    bindProductoForm();
     updateLastUpdate();
     setInterval(updateLastUpdate, 30000);
 }
@@ -145,8 +137,7 @@ async function saveProducto(e) {
         nombre: document.getElementById('prodNombre').value,
         categoria: document.getElementById('prodCategoria').value,
         precio: parseFloat(document.getElementById('prodPrecio').value),
-        precioAnterior: document.getElementById('prodPrecioAnterior').value ? 
-            parseFloat(document.getElementById('prodPrecioAnterior').value) : null,
+        precioAnterior: document.getElementById('prodPrecioAnterior').value ? parseFloat(document.getElementById('prodPrecioAnterior').value) : null,
         imagen: document.getElementById('prodImagen').value,
         descripcion: document.getElementById('prodDescripcion').value,
         activo: document.getElementById('prodActivo').checked,
@@ -195,8 +186,7 @@ async function deleteProducto(id) {
 function updateLastUpdate() {
     const el = document.getElementById('lastUpdate');
     if (!el) return;
-    const now = new Date();
-    el.textContent = 'Actualizado: ' + now.toLocaleTimeString();
+    el.textContent = 'Actualizado: ' + new Date().toLocaleTimeString();
 }
 
 function setupNavigation() {
@@ -204,8 +194,6 @@ function setupNavigation() {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
-            const section = btn.dataset.section;
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             
             const sectionMap = {
@@ -215,30 +203,36 @@ function setupNavigation() {
                 'estadisticas': 'sectionEstadisticas'
             };
             
-            const targetSection = document.getElementById(sectionMap[section]);
+            const targetSection = document.getElementById(sectionMap[btn.dataset.section]);
             if (targetSection) targetSection.classList.add('active');
             
             const titleEl = document.getElementById('sectionTitle');
             if (titleEl) titleEl.textContent = btn.textContent.trim();
             
-            if (section === 'estadisticas') {
-                actualizarEstadisticasDOM();
-            }
+            if (btn.dataset.section === 'estadisticas') actualizarEstadisticasDOM();
         });
     });
 }
 
-function setupProductoForm() {
-    document.getElementById('btnAddProducto').addEventListener('click', () => {
-        document.getElementById('productoId').value = '';
-        document.getElementById('productoForm').reset();
-        document.getElementById('modalTitle').textContent = 'Nuevo Producto';
-        document.getElementById('productoModal').classList.add('active');
-    });
-    
-    document.querySelector('#productoModal .modal-close').addEventListener('click', closeProductoModal);
-    document.getElementById('productoForm').addEventListener('submit', saveProducto);
-    document.querySelector('#productoModal .btn-cancel').addEventListener('click', closeProductoModal);
+function bindProductoForm() {
+    const btnAdd = document.getElementById('btnAddProducto');
+    const modal = document.getElementById('productoModal');
+    const form = document.getElementById('productoForm');
+    const closeBtn = document.querySelector('#productoModal .modal-close');
+    const cancelBtn = document.querySelector('#productoModal .btn-cancel');
+
+    if (btnAdd) {
+        btnAdd.onclick = function() {
+            document.getElementById('productoId').value = '';
+            form.reset();
+            document.getElementById('modalTitle').textContent = 'Nuevo Producto';
+            modal.classList.add('active');
+        };
+    }
+
+    if (closeBtn) closeBtn.onclick = closeProductoModal;
+    if (cancelBtn) cancelBtn.onclick = closeProductoModal;
+    if (form) form.onsubmit = saveProducto;
 }
 
 function closeProductoModal() {
@@ -249,70 +243,43 @@ function loadPedidos() {
     const q = query(collection(db, 'pedidos'), orderBy('timestamp', 'desc'));
     onSnapshot(q, (snapshot) => {
         pedidos = [];
-        snapshot.forEach((doc) => {
-            pedidos.push({ id: doc.id, ...doc.data() });
-        });
+        snapshot.forEach((doc) => pedidos.push({ id: doc.id, ...doc.data() }));
         renderPedidos(filtroPedidosActivo);
         updatePedidosBadge();
         actualizarEstadisticasDOM();
     });
 }
 
-function calcularEstadisticas() {
+function actualizarEstadisticasDOM() {
     const ahora = new Date();
     const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
-    
-    const pedidosDelMes = pedidos.filter(p => {
-        if (!p.timestamp) return false;
-        const fechaPedido = new Date(p.timestamp);
-        return fechaPedido >= inicioMes;
-    });
-    
+    const pedidosDelMes = pedidos.filter(p => p.timestamp && new Date(p.timestamp) >= inicioMes);
     const pedidosMes = pedidosDelMes.length;
-    const ventasMes = pedidosDelMes.reduce((total, p) => total + (p.total || 0), 0);
-    
-    const productosVendidos = {};
-    pedidosDelMes.forEach(p => {
-        if (p.items) {
-            p.items.forEach(i => {
-                const nombre = i.nombre || 'Desconocido';
-                productosVendidos[nombre] = (productosVendidos[nombre] || 0) + (i.cantidad || 1);
-            });
-        }
-    });
-    
-    const topProductos = Object.entries(productosVendidos)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
-    
-    return { pedidosMes, ventasMes, topProductos };
-}
-
-function actualizarEstadisticasDOM() {
-    const stats = calcularEstadisticas();
+    const ventasMes = pedidosDelMes.reduce((t, p) => t + (p.total || 0), 0);
     
     const ventasMesEl = document.getElementById('ventasMes');
     const pedidosMesEl = document.getElementById('pedidosMes');
     const topContainer = document.getElementById('topProductos');
     
-    if (ventasMesEl) ventasMesEl.textContent = 'Bs ' + stats.ventasMes.toLocaleString();
-    if (pedidosMesEl) pedidosMesEl.textContent = stats.pedidosMes;
+    if (ventasMesEl) ventasMesEl.textContent = 'Bs ' + ventasMes.toLocaleString();
+    if (pedidosMesEl) pedidosMesEl.textContent = pedidosMes;
     
     if (topContainer) {
-        if (stats.topProductos.length === 0) {
-            topContainer.innerHTML = '<p style="color:#999;">Sin ventas este mes</p>';
-        } else {
-            topContainer.innerHTML = stats.topProductos.map((item, index) => 
-                '<p>' + (index + 1) + '. ' + item[0] + ' - ' + item[1] + ' vendido' + (item[1] > 1 ? 's' : '') + '</p>'
-            ).join('');
-        }
+        const productosVendidos = {};
+        pedidosDelMes.forEach(p => {
+            if (p.items) p.items.forEach(i => {
+                const n = i.nombre || 'Desconocido';
+                productosVendidos[n] = (productosVendidos[n] || 0) + (i.cantidad || 1);
+            });
+        });
+        const top = Object.entries(productosVendidos).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        topContainer.innerHTML = top.length === 0 ? '<p style="color:#999;">Sin ventas este mes</p>' : top.map((item, i) => '<p>' + (i + 1) + '. ' + item[0] + ' - ' + item[1] + ' vendido' + (item[1] > 1 ? 's' : '') + '</p>').join('');
     }
 }
 
 function renderPedidos(filter = 'todos') {
     const container = document.getElementById('pedidosList');
     if (!container) return;
-    
     let filtered = filter === 'todos' ? pedidos : pedidos.filter(p => p.estado === filter);
     
     if (filtered.length === 0) {
@@ -345,40 +312,21 @@ function renderPedidos(filter = 'todos') {
                 </div>
             </div>
             <div class="pedido-actions">
-                ${p.estado === 'pendiente' ? `
-                    <button class="btn-confirmar" data-id="${p.id}">Confirmar Pedido</button>
-                ` : ''}
-                ${p.estado === 'confirmado' ? `
-                    <button class="btn-enviar" data-id="${p.id}">Marcar como Enviado</button>
-                ` : ''}
+                ${p.estado === 'pendiente' ? `<button class="btn-confirmar" data-id="${p.id}">Confirmar Pedido</button>` : ''}
+                ${p.estado === 'confirmado' ? `<button class="btn-enviar" data-id="${p.id}">Marcar como Enviado</button>` : ''}
             </div>
         </div>
     `).join('');
 
     document.querySelectorAll('.btn-confirmar').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            try {
-                await updateDoc(doc(db, 'pedidos', btn.dataset.id), {
-                    estado: 'confirmado',
-                    confirmadoAt: new Date().toISOString()
-                });
-            } catch (error) {
-                alert('Error: ' + error.message);
-            }
-        });
+        btn.onclick = async () => {
+            await updateDoc(doc(db, 'pedidos', btn.dataset.id), { estado: 'confirmado', confirmadoAt: new Date().toISOString() });
+        };
     });
-
     document.querySelectorAll('.btn-enviar').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            try {
-                await updateDoc(doc(db, 'pedidos', btn.dataset.id), {
-                    estado: 'enviado',
-                    enviadoAt: new Date().toISOString()
-                });
-            } catch (error) {
-                alert('Error: ' + error.message);
-            }
-        });
+        btn.onclick = async () => {
+            await updateDoc(doc(db, 'pedidos', btn.dataset.id), { estado: 'enviado', enviadoAt: new Date().toISOString() });
+        };
     });
 
     updateExportAndDeleteButtons(filter, true);
@@ -394,10 +342,10 @@ document.querySelectorAll('.filtro-pedido').forEach(btn => {
 });
 
 function updateExportAndDeleteButtons(estado, mostrar) {
-    let existingExportBtn = document.getElementById('btnExportar');
-    let existingDeleteBtn = document.getElementById('btnEliminarEnviados');
-    if (existingExportBtn) existingExportBtn.remove();
-    if (existingDeleteBtn) existingDeleteBtn.remove();
+    let eb = document.getElementById('btnExportar');
+    let dbBtn = document.getElementById('btnEliminarEnviados');
+    if (eb) eb.remove();
+    if (dbBtn) dbBtn.remove();
     
     if (estado === 'enviado' && mostrar) {
         const pedidosList = document.getElementById('pedidosList');
@@ -405,27 +353,14 @@ function updateExportAndDeleteButtons(estado, mostrar) {
         const exportBtn = document.createElement('button');
         exportBtn.id = 'btnExportar';
         exportBtn.className = 'btn-exportar';
-        exportBtn.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-            Exportar a Hoja de Calculo
-        `;
-        exportBtn.addEventListener('click', exportarEnviados);
+        exportBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Exportar a Hoja de Calculo`;
+        exportBtn.onclick = exportarEnviados;
         
         const deleteBtn = document.createElement('button');
         deleteBtn.id = 'btnEliminarEnviados';
         deleteBtn.className = 'btn-eliminar-enviados';
-        deleteBtn.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"/>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-            </svg>
-            Eliminar Todos los Enviados
-        `;
-        deleteBtn.addEventListener('click', eliminarTodosEnviados);
+        deleteBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Eliminar Todos los Enviados`;
+        deleteBtn.onclick = eliminarTodosEnviados;
         
         pedidosList.parentNode.insertBefore(deleteBtn, pedidosList);
         pedidosList.parentNode.insertBefore(exportBtn, pedidosList);
@@ -434,83 +369,47 @@ function updateExportAndDeleteButtons(estado, mostrar) {
 
 async function eliminarTodosEnviados() {
     const enviados = pedidos.filter(p => p.estado === 'enviado');
-    
-    if (enviados.length === 0) {
-        alert('No hay pedidos enviados para eliminar');
-        return;
-    }
-    
-    if (!confirm('Estas seguro de eliminar ' + enviados.length + ' pedidos enviados? Esta accion no se puede deshacer.')) {
-        return;
-    }
-    
-    try {
-        const batch = writeBatch(db);
-        enviados.forEach(p => {
-            batch.delete(doc(db, 'pedidos', p.id));
-        });
-        await batch.commit();
-        alert(enviados.length + ' pedidos eliminados correctamente');
-    } catch (error) {
-        alert('Error al eliminar: ' + error.message);
-    }
+    if (enviados.length === 0) return alert('No hay pedidos enviados');
+    if (!confirm('Eliminar ' + enviados.length + ' pedidos enviados?')) return;
+    const batch = writeBatch(db);
+    enviados.forEach(p => batch.delete(doc(db, 'pedidos', p.id)));
+    await batch.commit();
+    alert(enviados.length + ' pedidos eliminados');
 }
 
 function exportarEnviados() {
     const enviados = pedidos.filter(p => p.estado === 'enviado');
-    
-    if (enviados.length === 0) {
-        alert('No hay pedidos enviados para exportar');
-        return;
-    }
+    if (enviados.length === 0) return alert('No hay pedidos enviados');
     
     let csv = 'ID Pedido,Fecha,Cliente,Email,Total,Estado\n';
-    
     enviados.forEach(p => {
-        const fecha = p.timestamp ? new Date(p.timestamp).toLocaleDateString('es-BO') : 'N/A';
-        csv += `${p.id.slice(-6)},${fecha},${p.cliente?.nombre || 'N/A'},${p.cliente?.email || 'N/A'},Bs ${p.total},${p.estado}\n`;
+        csv += `${p.id.slice(-6)},${p.timestamp ? new Date(p.timestamp).toLocaleDateString('es-BO') : 'N/A'},${p.cliente?.nombre || 'N/A'},${p.cliente?.email || 'N/A'},Bs ${p.total},${p.estado}\n`;
     });
-    
-    csv += '\n\nDetalle de Productos\n';
-    csv += 'ID Pedido,Producto,Cantidad,Precio Unitario,Subtotal\n';
-    
+    csv += '\n\nDetalle de Productos\nID Pedido,Producto,Cantidad,Precio Unitario,Subtotal\n';
     enviados.forEach(p => {
-        if (p.items) {
-            p.items.forEach(i => {
-                csv += `${p.id.slice(-6)},${i.nombre},${i.cantidad},Bs ${i.precio},Bs ${i.subtotal || i.precio * i.cantidad}\n`;
-            });
-        }
+        if (p.items) p.items.forEach(i => {
+            csv += `${p.id.slice(-6)},${i.nombre},${i.cantidad},Bs ${i.precio},Bs ${i.subtotal || i.precio * i.cantidad}\n`;
+        });
     });
     
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'pedidos_enviados_' + new Date().toISOString().slice(0, 10) + '.csv');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
+    link.href = URL.createObjectURL(blob);
+    link.download = 'pedidos_enviados_' + new Date().toISOString().slice(0, 10) + '.csv';
     link.click();
-    document.body.removeChild(link);
 }
 
 function updatePedidosBadge() {
     const badge = document.getElementById('pedidosPendientes');
-    if (!badge) return;
-    const pendientes = pedidos.filter(p => p.estado === 'pendiente').length;
-    badge.textContent = pendientes;
+    if (badge) badge.textContent = pedidos.filter(p => p.estado === 'pendiente').length;
 }
 
 function updateStats() {
     const ofertas = productos.filter(p => p.precioAnterior !== null);
-    const ofertasActivasEl = document.getElementById('ofertasActivas');
-    const productosEnOfertaEl = document.getElementById('productosEnOferta');
-    const descuentoPromedioEl = document.getElementById('descuentoPromedio');
-    
-    if (ofertasActivasEl) ofertasActivasEl.textContent = ofertas.length;
-    if (productosEnOfertaEl) productosEnOfertaEl.textContent = ofertas.length;
-    
-    const descuentoPromedio = ofertas.length > 0 
-        ? Math.round(ofertas.reduce((sum, p) => sum + (1 - p.precio / p.precioAnterior) * 100, 0) / ofertas.length)
-        : 0;
-    if (descuentoPromedioEl) descuentoPromedioEl.textContent = descuentoPromedio + '%';
+    const oa = document.getElementById('ofertasActivas');
+    const po = document.getElementById('productosEnOferta');
+    const dp = document.getElementById('descuentoPromedio');
+    if (oa) oa.textContent = ofertas.length;
+    if (po) po.textContent = ofertas.length;
+    if (dp) dp.textContent = (ofertas.length > 0 ? Math.round(ofertas.reduce((s, p) => s + (1 - p.precio / p.precioAnterior) * 100, 0) / ofertas.length) : 0) + '%';
 }
