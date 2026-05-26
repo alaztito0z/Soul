@@ -1,13 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-storage.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCvgTHO9WZA8_DnVPNzKFelwURtyGqlKAs",
     authDomain: "soul-joyeria.firebaseapp.com",
     projectId: "soul-joyeria",
-    storageBucket: "soul-joyeria.firebasestorage.app",
+    storageBucket: "soul-joyeria.appspot.com",
     messagingSenderId: "120513073976",
     appId: "1:120513073976:web:3ec1f3cd09c30de68d67cd"
 };
@@ -15,7 +14,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const storage = getStorage(app);
 
 const loginScreen = document.getElementById('loginScreen');
 const dashboard = document.getElementById('dashboard');
@@ -89,8 +87,6 @@ function loadProductos() {
         });
         renderProductos();
         updateStats();
-    }, (error) => {
-        console.error('Error loading products:', error);
     });
 }
 
@@ -144,9 +140,6 @@ document.getElementById('searchProducto').addEventListener('input', (e) => {
 async function saveProducto(e) {
     e.preventDefault();
     const id = document.getElementById('productoId').value;
-    const file = document.getElementById('prodImagenFile').files[0];
-    const progressDiv = document.getElementById('uploadProgress');
-    const progressBar = document.getElementById('progressBar');
     
     const productoData = {
         nombre: document.getElementById('prodNombre').value,
@@ -154,43 +147,13 @@ async function saveProducto(e) {
         precio: parseFloat(document.getElementById('prodPrecio').value),
         precioAnterior: document.getElementById('prodPrecioAnterior').value ? 
             parseFloat(document.getElementById('prodPrecioAnterior').value) : null,
+        imagen: document.getElementById('prodImagen').value,
         descripcion: document.getElementById('prodDescripcion').value,
         activo: document.getElementById('prodActivo').checked,
         updatedAt: new Date().toISOString()
     };
     
     try {
-        if (file) {
-            progressDiv.style.display = 'block';
-            const storageRef = ref(storage, 'productos/' + Date.now() + '_' + file.name);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-            
-            await new Promise((resolve, reject) => {
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        progressBar.style.width = progress + '%';
-                    },
-                    (error) => reject(error),
-                    async () => {
-                        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                        productoData.imagen = downloadURL;
-                        resolve();
-                    }
-                );
-            });
-            
-            progressDiv.style.display = 'none';
-            progressBar.style.width = '0';
-        } else if (document.getElementById('prodImagen').value) {
-            productoData.imagen = document.getElementById('prodImagen').value;
-        }
-        
-        if (!productoData.imagen) {
-            alert('Debes subir una imagen o colocar una URL');
-            return;
-        }
-        
         if (id) {
             await updateDoc(doc(db, 'productos', id), productoData);
         } else {
@@ -199,7 +162,6 @@ async function saveProducto(e) {
         closeProductoModal();
     } catch (error) {
         alert('Error al guardar: ' + error.message);
-        progressDiv.style.display = 'none';
     }
 }
 
@@ -212,23 +174,9 @@ function editProducto(id) {
     document.getElementById('prodCategoria').value = producto.categoria || '';
     document.getElementById('prodPrecio').value = producto.precio || 0;
     document.getElementById('prodPrecioAnterior').value = producto.precioAnterior || '';
+    document.getElementById('prodImagen').value = producto.imagen || '';
     document.getElementById('prodDescripcion').value = producto.descripcion || '';
     document.getElementById('prodActivo').checked = producto.activo !== false;
-    document.getElementById('prodImagen').value = producto.imagen || '';
-    
-    const preview = document.getElementById('previewImagen');
-    const placeholder = document.getElementById('uploadPlaceholder');
-    if (producto.imagen) {
-        preview.src = producto.imagen;
-        preview.style.display = 'block';
-        placeholder.style.display = 'none';
-    } else {
-        preview.style.display = 'none';
-        placeholder.style.display = 'block';
-    }
-    
-    document.getElementById('prodImagenFile').value = '';
-    document.getElementById('uploadProgress').style.display = 'none';
     
     document.getElementById('modalTitle').textContent = 'Editar Producto';
     document.getElementById('productoModal').classList.add('active');
@@ -281,59 +229,9 @@ function setupNavigation() {
 }
 
 function setupProductoForm() {
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('prodImagenFile');
-    const preview = document.getElementById('previewImagen');
-    const placeholder = document.getElementById('uploadPlaceholder');
-    const progressDiv = document.getElementById('uploadProgress');
-
-    uploadArea.addEventListener('click', () => fileInput.click());
-
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-                placeholder.style.display = 'none';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.style.borderColor = 'var(--color-gold)';
-    });
-
-    uploadArea.addEventListener('dragleave', () => {
-        uploadArea.style.borderColor = 'var(--border-color)';
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.style.borderColor = 'var(--border-color)';
-        const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith('image/')) {
-            fileInput.files = e.dataTransfer.files;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-                placeholder.style.display = 'none';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
     document.getElementById('btnAddProducto').addEventListener('click', () => {
         document.getElementById('productoId').value = '';
         document.getElementById('productoForm').reset();
-        preview.style.display = 'none';
-        placeholder.style.display = 'block';
-        progressDiv.style.display = 'none';
-        document.getElementById('prodImagen').value = '';
         document.getElementById('modalTitle').textContent = 'Nuevo Producto';
         document.getElementById('productoModal').classList.add('active');
     });
