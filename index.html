@@ -82,49 +82,63 @@
     <section class="section categorias" id="categorias">
         <div class="container">
             <h2 class="section-title">Categorias</h2>
-            <div class="grid-categorias">
+            <div class="carrusel-wrapper" id="carruselCategorias">
+                <div class="grid-categorias" id="gridCategorias">
 
-                <a href="catalogo.html?categoria=anillos" class="cat-item">
-                    <img src="anillos.jpg" alt="Anillos Soul" class="cat-img">
-                    <span class="cat-badge">Nuevo</span>
-                    <div class="cat-shine"></div>
-                    <div class="cat-overlay">
-                        <h3 class="cat-nombre">Anillos</h3>
-                        <span class="cat-link">Ver Coleccion</span>
-                    </div>
-                </a>
+                    <a href="catalogo.html?categoria=anillos" class="cat-item">
+                        <img src="anillos.jpg" alt="Anillos Soul" class="cat-img">
+                        <span class="cat-badge">Nuevo</span>
+                        <div class="cat-shine"></div>
+                        <div class="cat-overlay">
+                            <h3 class="cat-nombre">Anillos</h3>
+                            <span class="cat-link">Ver Coleccion</span>
+                        </div>
+                    </a>
 
-                <a href="catalogo.html?categoria=aretes" class="cat-item">
-                    <img src="aretes.jpg" alt="Aretes Soul" class="cat-img">
-                    <span class="cat-badge">Top</span>
-                    <div class="cat-shine"></div>
-                    <div class="cat-overlay">
-                        <h3 class="cat-nombre">Aretes</h3>
-                        <span class="cat-link">Ver Coleccion</span>
-                    </div>
-                </a>
+                    <a href="catalogo.html?categoria=aretes" class="cat-item">
+                        <img src="aretes.jpg" alt="Aretes Soul" class="cat-img">
+                        <span class="cat-badge">Top</span>
+                        <div class="cat-shine"></div>
+                        <div class="cat-overlay">
+                            <h3 class="cat-nombre">Aretes</h3>
+                            <span class="cat-link">Ver Coleccion</span>
+                        </div>
+                    </a>
 
-                <a href="catalogo.html?categoria=collares" class="cat-item">
-                    <img src="collares.jpg" alt="Collares Soul" class="cat-img">
-                    <span class="cat-badge">Nuevo</span>
-                    <div class="cat-shine"></div>
-                    <div class="cat-overlay">
-                        <h3 class="cat-nombre">Collares</h3>
-                        <span class="cat-link">Ver Coleccion</span>
-                    </div>
-                </a>
+                    <a href="catalogo.html?categoria=collares" class="cat-item">
+                        <img src="collares.jpg" alt="Collares Soul" class="cat-img">
+                        <span class="cat-badge">Nuevo</span>
+                        <div class="cat-shine"></div>
+                        <div class="cat-overlay">
+                            <h3 class="cat-nombre">Collares</h3>
+                            <span class="cat-link">Ver Coleccion</span>
+                        </div>
+                    </a>
 
-                <a href="catalogo.html?categoria=relojes" class="cat-item">
-                    <img src="relojes.jpg" alt="Relojes Soul" class="cat-img">
-                    <span class="cat-badge">Exclusivo</span>
-                    <div class="cat-shine"></div>
-                    <div class="cat-overlay">
-                        <h3 class="cat-nombre">Relojes</h3>
-                        <span class="cat-link">Ver Coleccion</span>
-                    </div>
-                </a>
+                    <a href="catalogo.html?categoria=relojes" class="cat-item">
+                        <img src="relojes.jpg" alt="Relojes Soul" class="cat-img">
+                        <span class="cat-badge">Exclusivo</span>
+                        <div class="cat-shine"></div>
+                        <div class="cat-overlay">
+                            <h3 class="cat-nombre">Relojes</h3>
+                            <span class="cat-link">Ver Coleccion</span>
+                        </div>
+                    </a>
 
+                </div>
+
+                <button class="carrusel-flecha prev" id="flechaPrev" aria-label="Anterior">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                </button>
+                <button class="carrusel-flecha next" id="flechaNext" aria-label="Siguiente">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </button>
             </div>
+            <div class="carrusel-dots" id="carruselDots"></div>
         </div>
     </section>
 
