@@ -42,7 +42,7 @@ body {
     width: 400px;
     text-align: center;
     border: 1px solid var(--border-color);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
 .login-logo {
@@ -261,13 +261,8 @@ body {
 }
 
 @keyframes pulse {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.3;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
 }
 
 .last-update {
@@ -285,14 +280,8 @@ body {
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .toolbar {
@@ -471,7 +460,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0,0,0,0.85);
     z-index: 1000;
     align-items: center;
     justify-content: center;
@@ -632,46 +621,179 @@ body {
     border: 1px solid var(--border-color);
 }
 
-.pedido-card h3 {
+.pedido-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.pedido-header h3 {
     font-family: 'Playfair Display', serif;
     font-weight: 400;
-    margin-bottom: 1rem;
     letter-spacing: 1px;
 }
 
-.pedido-card p {
+.pedido-estado {
+    padding: 6px 16px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.estado-pendiente {
+    background: rgba(243, 156, 18, 0.15);
+    color: var(--color-warning);
+}
+
+.estado-confirmado {
+    background: rgba(52, 152, 219, 0.15);
+    color: #3498db;
+}
+
+.estado-enviado {
+    background: rgba(46, 204, 113, 0.15);
+    color: var(--color-success);
+}
+
+.pedido-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.pedido-info p {
     font-size: 0.85rem;
     color: var(--color-text-secondary);
     margin-bottom: 0.5rem;
+}
+
+.pedido-info p strong {
+    color: var(--color-text);
+}
+
+.pedido-items h4 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-gold);
+    margin-bottom: 0.8rem;
+}
+
+.pedido-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.85rem;
+}
+
+.pedido-actions {
+    display: flex;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-confirmar {
+    padding: 10px 20px;
+    background: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+}
+
+.btn-confirmar:hover {
+    background: #2980b9;
+}
+
+.btn-enviar {
+    padding: 10px 20px;
+    background: var(--color-success);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+}
+
+.btn-enviar:hover {
+    background: #27ae60;
+}
+
+.btn-exportar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--color-gold);
+    color: #0f0f0f;
+    border: none;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s;
+}
+
+.btn-exportar:hover {
+    background: var(--color-gold-light);
 }
 
 @media (max-width: 768px) {
     .sidebar {
         width: 60px;
     }
+    
     .sidebar-header h2,
     .sidebar-header span,
     .nav-btn span:not(.badge),
-    .nav-btn svg+span,
+    .nav-btn svg + span,
     .badge {
         display: none;
     }
+
     .nav-btn {
         justify-content: center;
         padding: 12px;
     }
+    
     .main-content {
         margin-left: 60px;
         padding: 1.5rem;
     }
+    
     .stats-cards,
     .stats-grid {
         grid-template-columns: 1fr;
     }
+    
     .form-row {
         grid-template-columns: 1fr;
     }
+
     .dashboard-header h1 {
         font-size: 1.3rem;
+    }
+
+    .pedido-body {
+        grid-template-columns: 1fr;
+    }
+    
+    .pedido-actions {
+        flex-direction: column;
     }
 }
