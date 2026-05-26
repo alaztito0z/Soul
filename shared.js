@@ -1,3 +1,18 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCvgTHO9WZA8_DnVPNzKFelwURtyGqlKAs",
+    authDomain: "soul-joyeria.firebaseapp.com",
+    projectId: "soul-joyeria",
+    storageBucket: "soul-joyeria.firebasestorage.app",
+    messagingSenderId: "120513073976",
+    appId: "1:120513073976:web:3ec1f3cd09c30de68d67cd"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 document.addEventListener('DOMContentLoaded', function() {
 
     const body = document.body;
@@ -88,18 +103,10 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.addEventListener('click', closeMenu);
         document.querySelectorAll('.nav-menu a').forEach(link => link.addEventListener('click', closeMenu));
     }
+
     const themeToggle = document.querySelector('.theme-toggle');
     const themeIcon = document.querySelector('.theme-icon');
     if (themeToggle && themeIcon) {
-        //themeToggle.addEventListener('click', function() {
-            //body.classList.toggle('dark');
-            //themeIcon.textContent = body.classList.contains('dark') ? '☀️' : '🌙';
-            //localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
-        //});
-        //if (localStorage.getItem('theme') === 'dark') {
-            //body.classList.add('dark');
-            //themeIcon.textContent = '☀️';
-        //}
     }
 
     const scrollTopBtn = document.querySelector('.scroll-top');
@@ -125,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function notificar(nombre) {
         const n = document.createElement('div');
         n.className = 'notificacion-carrito';
-        n.innerHTML = '✓ <strong>' + nombre + '</strong> añadido al carrito';
+        n.innerHTML = '<strong>' + nombre + '</strong> a&ntilde;adido al carrito';
         n.style.cssText = 'position:fixed;bottom:30px;right:30px;background:var(--color-dark);color:var(--color-white);padding:15px 25px;border-left:3px solid var(--color-gold);font-family:var(--font-sans);font-size:0.85rem;z-index:9999;opacity:0;transform:translateX(100px);transition:all 0.4s ease;border-radius:2px;box-shadow:0 5px 20px rgba(0,0,0,0.2);pointer-events:none;';
         document.body.appendChild(n);
         setTimeout(() => {
@@ -148,8 +155,11 @@ document.addEventListener('DOMContentLoaded', function() {
         updateUI();
         notificar(nombre);
     };
+
     window.obtenerCarrito = () => cartCount;
+
     window.obtenerItemsCarrito = () => cartItems;
+
     window.eliminarDelCarrito = function(nombre) {
         const idx = cartItems.findIndex(i => i.nombre === nombre);
         if (idx !== -1) {
@@ -160,7 +170,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-
     const btnCarrito = document.getElementById('btnCarritoNav');
     const modalCarrito = document.getElementById('carritoModal');
     const cerrarCarrito = document.getElementById('cerrarCarrito');
@@ -170,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderCarrito() {
         if (!cuerpoCarrito) return;
         if (cartItems.length === 0) {
-            cuerpoCarrito.innerHTML = '<div class="carrito-vacio"><span class="carrito-vacio-icono">🛒</span><p>Tu carrito está vacío</p><p style="font-size:0.8rem;margin-top:5px;">Añade productos desde nuestro catálogo</p></div>';
+            cuerpoCarrito.innerHTML = '<div class="carrito-vacio"><span class="carrito-vacio-icono"></span><p>Tu carrito est&aacute; vac&iacute;o</p><p style="font-size:0.8rem;margin-top:5px;">A&ntilde;ade productos desde nuestro cat&aacute;logo</p></div>';
             if (btnFinalizar) btnFinalizar.style.display = 'none';
             return;
         }
@@ -185,11 +194,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <img src="${item.imagen}" class="carrito-item-img">
                     <div><p class="carrito-item-nombre">${item.nombre}</p><p style="font-size:0.7rem;color:#999;">x${item.cantidad}</p></div>
                 </div>
-                <span class="carrito-item-precio">€ ${sub.toLocaleString()}</span>
-                <button class="carrito-item-eliminar" data-nombre="${item.nombre}">✕</button>
+                <span class="carrito-item-precio">Bs ${sub.toLocaleString()}</span>
+                <button class="carrito-item-eliminar" data-nombre="${item.nombre}">&times;</button>
             </div>`;
         });
-        html += `<div class="carrito-total"><span>Total</span><span class="carrito-total-precio">€ ${total.toLocaleString()}</span></div>`;
+        html += `<div class="carrito-total"><span>Total</span><span class="carrito-total-precio">Bs ${total.toLocaleString()}</span></div>`;
         cuerpoCarrito.innerHTML = html;
         document.querySelectorAll('.carrito-item-eliminar').forEach(b => {
             b.addEventListener('click', function() {
@@ -221,16 +230,43 @@ document.addEventListener('DOMContentLoaded', function() {
     if (modalCarrito) modalCarrito.addEventListener('click', function(e) { if (e.target === modalCarrito) cerrarModalCarrito(); });
 
     if (btnFinalizar) {
-        btnFinalizar.addEventListener('click', function() {
+        btnFinalizar.addEventListener('click', async function() {
             if (cartItems.length === 0) return;
+
             let msg = 'Hola Soul, quiero finalizar mi pedido:%0A%0A';
             let total = 0;
+            const itemsPedido = [];
+
             cartItems.forEach(i => {
                 const sub = i.precio * i.cantidad;
                 total += sub;
-                msg += '• ' + i.nombre + ' x' + i.cantidad + ' = €' + sub.toLocaleString() + '%0A';
+                itemsPedido.push({
+                    nombre: i.nombre,
+                    precio: i.precio,
+                    cantidad: i.cantidad,
+                    subtotal: sub,
+                    imagen: i.imagen
+                });
+                msg += '\u2022 ' + i.nombre + ' x' + i.cantidad + ' = Bs' + sub.toLocaleString() + '%0A';
             });
-            msg += '%0A*Total: €' + total.toLocaleString() + '*%0A%0ANombre:%0AEmail:%0ADirección:%0A%0APor favor contáctenme.';
+            msg += '%0A*Total: Bs' + total.toLocaleString() + '*%0A%0ANombre:%0AEmail:%0ADirecci\u00f3n:%0A%0APor favor cont\u00e1ctenme.';
+
+            try {
+                await addDoc(collection(db, 'pedidos'), {
+                    items: itemsPedido,
+                    total: total,
+                    estado: 'pendiente',
+                    timestamp: serverTimestamp(),
+                    cliente: {
+                        nombre: '',
+                        email: '',
+                        direccion: ''
+                    }
+                });
+            } catch (error) {
+                console.error('Error al guardar pedido:', error);
+            }
+
             window.open('https://wa.me/59162669099?text=' + msg, '_blank');
             cerrarModalCarrito();
         });
@@ -252,16 +288,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (modalImg) modalImg.src = producto.imagen;
         if (modalCat) modalCat.textContent = producto.categoria;
         if (modalNom) modalNom.textContent = producto.nombre;
-        if (modalPre) modalPre.textContent = '€ ' + producto.precio.toLocaleString();
+        if (modalPre) modalPre.textContent = 'Bs ' + producto.precio.toLocaleString();
         if (modalAddBtn) {
-            modalAddBtn.textContent = 'Añadir al Carrito';
+            modalAddBtn.textContent = 'A\u00f1adir al Carrito';
             modalAddBtn.onclick = function() {
                 window.actualizarCarrito(producto.nombre, producto.precio, producto.imagen);
-                modalAddBtn.textContent = '✓ Añadido';
+                modalAddBtn.textContent = 'A\u00f1adido';
                 modalAddBtn.style.backgroundColor = 'var(--color-gold)';
                 modalAddBtn.style.color = 'white';
                 setTimeout(() => {
-                    modalAddBtn.textContent = 'Añadir al Carrito';
+                    modalAddBtn.textContent = 'A\u00f1adir al Carrito';
                     modalAddBtn.style.backgroundColor = 'transparent';
                     modalAddBtn.style.color = 'var(--color-gold)';
                 }, 1200);
@@ -295,17 +331,18 @@ document.addEventListener('DOMContentLoaded', function() {
             updateUI();
         }
     });
+
     const btnUsuario = document.getElementById('btnUsuarioNav');
     if (btnUsuario) {
         const usuario = JSON.parse(localStorage.getItem('soul_usuario') || 'null');
         if (usuario) {
-            btnUsuario.querySelector('.user-icon').textContent = '✅';
+            btnUsuario.querySelector('.user-icon').textContent = '\u2705';
         }
         btnUsuario.addEventListener('click', function(e) {
             e.preventDefault();
             window.location.href = 'cuenta.html';
         });
     }
+
     updateUI();
-    console.log(' Soul - Shared cargado correctamente.');
 });
