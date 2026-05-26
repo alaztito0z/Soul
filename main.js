@@ -19,10 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const cursor = document.querySelector('.cursor');
     const cursorDot = document.querySelector('.cursor-dot');
-    let mouseX = 0,
-        mouseY = 0;
-    let dotX = 0,
-        dotY = 0;
+    let mouseX = 0, mouseY = 0;
+    let dotX = 0, dotY = 0;
 
     if (window.innerWidth > 768) {
         document.addEventListener('mousemove', function(e) {
@@ -60,10 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
         particle.style.animationDuration = Math.random() * 10 + 10 + 's';
         particle.style.animationDelay = Math.random() * 5 + 's';
         particlesContainer.appendChild(particle);
-
-        setTimeout(() => {
-            particle.remove();
-        }, 15000);
+        setTimeout(() => { particle.remove(); }, 15000);
     }
 
     setInterval(createParticle, 800);
@@ -72,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const header = document.querySelector('.header');
-
     window.addEventListener('scroll', function() {
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
@@ -109,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const heroBg = document.querySelector('.hero-bg');
-
     window.addEventListener('scroll', function() {
         if (heroBg) {
             const scrollY = window.scrollY;
@@ -118,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     const scrollTopBtn = document.querySelector('.scroll-top');
-
     window.addEventListener('scroll', function() {
         if (window.scrollY > 500) {
             scrollTopBtn.classList.add('visible');
@@ -131,24 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    const themeToggle = document.querySelector('.theme-toggle');
-    const themeIcon = document.querySelector('.theme-icon');
-
-    //themeToggle.addEventListener('click', function() {
-        //body.classList.toggle('dark');
-        //if (body.classList.contains('dark')) {
-            //themeIcon.textContent = '☀️';
-            //localStorage.setItem('theme', 'dark');
-        //} else {
-            //themeIcon.textContent = '🌙';
-            //localStorage.setItem('theme', 'light');
-        //}
-    //});
-
-    //if (localStorage.getItem('theme') === 'dark') {
-        //body.classList.add('dark');
-        //themeIcon.textContent = '☀️';
-    //}
     const soundToggle = document.querySelector('.sound-toggle');
     const soundIcon = document.querySelector('.sound-icon');
     const ambientSound = document.getElementById('ambientSound');
@@ -182,11 +156,11 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             updateCart();
-            btn.textContent = '✓ Añadido';
+            btn.textContent = 'Añadido';
             btn.style.backgroundColor = 'var(--color-gold)';
             btn.style.color = 'var(--color-white)';
             setTimeout(() => {
-                btn.textContent = 'Añadir al Carrito';
+                btn.textContent = 'Anadir al Carrito';
                 btn.style.backgroundColor = 'transparent';
                 btn.style.color = 'var(--color-gold)';
             }, 1500);
@@ -205,18 +179,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 const mensajeField = document.getElementById('mensaje');
                 if (mensajeField) {
-                    mensajeField.value = 'Quiero finalizar mi pedido de ' + cartCount + ' producto' + (cartCount > 1 ? 's' : '') + '. Por favor contáctenme.';
+                    mensajeField.value = 'Quiero finalizar mi pedido de ' + cartCount + ' producto' + (cartCount > 1 ? 's' : '') + '. Por favor contactenme.';
                 }
                 setTimeout(() => {
-                    addToCartModal.textContent = 'Añadir al Carrito';
-                    document.querySelector('.modal-descripcion').textContent = 'Cada pieza Soul es única, creada con materiales de la más alta calidad y un diseño que trasciende tendencias.';
+                    addToCartModal.textContent = 'Anadir al Carrito';
+                    document.querySelector('.modal-descripcion').textContent = 'Cada pieza Soul es unica, creada con materiales de la mas alta calidad y un diseno que trasciende tendencias.';
                 }, 500);
             } else {
                 e.preventDefault();
                 updateCart();
-                this.textContent = '✓ Añadido';
+                this.textContent = 'Añadido';
                 setTimeout(() => {
-                    this.textContent = 'Añadir al Carrito';
+                    this.textContent = 'Anadir al Carrito';
                 }, 1500);
             }
         });
@@ -239,9 +213,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function restaurarModal() {
         const desc = document.querySelector('.modal-descripcion');
-        if (desc) desc.textContent = 'Cada pieza Soul es única, creada con materiales de la más alta calidad y un diseño que trasciende tendencias.';
+        if (desc) desc.textContent = 'Cada pieza Soul es unica, creada con materiales de la mas alta calidad y un diseno que trasciende tendencias.';
         if (addToCartModal) {
-            addToCartModal.textContent = 'Añadir al Carrito';
+            addToCartModal.textContent = 'Anadir al Carrito';
             addToCartModal.style.display = 'inline-block';
         }
     }
@@ -293,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                formMensaje.textContent = 'Por favor ingresa un email válido.';
+                formMensaje.textContent = 'Por favor ingresa un email valido.';
                 formMensaje.className = 'form-mensaje error';
                 return;
             }
@@ -317,8 +291,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             emailjs.send('service_r2vdxb7', 'template_a7whhvg', templateParams)
                 .then(function(response) {
-                    console.log(' Email enviado:', response.status);
-                    formMensaje.textContent = ' Gracias ' + nombre + '. Nos pondremos en contacto contigo pronto.';
+                    console.log('Email enviado:', response.status);
+                    formMensaje.textContent = 'Gracias ' + nombre + '. Nos pondremos en contacto contigo pronto.';
                     formMensaje.className = 'form-mensaje success';
                     contactoForm.reset();
                     btnText.style.display = 'inline';
@@ -331,8 +305,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }, 5000);
                 })
                 .catch(function(error) {
-                    console.error(' Error:', error);
-                    formMensaje.textContent = 'Hubo un error. Intenta de nuevo o contáctanos directamente.';
+                    console.error('Error:', error);
+                    formMensaje.textContent = 'Hubo un error. Intenta de nuevo o contactanos directamente.';
                     formMensaje.className = 'form-mensaje error';
                     btnText.style.display = 'inline';
                     btnLoader.style.display = 'none';
@@ -356,7 +330,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const animar = [
         '.filosofia-texto',
-        '.cat-item',
         '.destacado-info',
         '.esencia-item',
         '.testimonio-texto',
@@ -381,6 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
     const btnMasDetalles = document.getElementById('btnMasDetalles');
     if (btnMasDetalles) {
         btnMasDetalles.addEventListener('click', function(e) {
@@ -391,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 modalImg.src = destacadoImg.getAttribute('src');
                 modalCategoria.textContent = 'Destacado';
                 modalNombre.textContent = 'Pulsera de Plata';
-                modalPrecio.textContent = '€ 1.250';
+                modalPrecio.textContent = 'Bs 1.250';
                 modal.classList.add('active');
                 body.style.overflow = 'hidden';
             }
@@ -406,10 +380,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (cartCount === 0) {
             if (modalImg) modalImg.src = 'anillos.jpg';
             if (modalCategoria) modalCategoria.textContent = '';
-            if (modalNombre) modalNombre.textContent = 'Tu carrito está vacío';
+            if (modalNombre) modalNombre.textContent = 'Tu carrito esta vacio';
             if (modalPrecio) modalPrecio.textContent = '';
             const desc = document.querySelector('.modal-descripcion');
-            if (desc) desc.textContent = 'Añade productos desde nuestras categorías o desde la sección destacada.';
+            if (desc) desc.textContent = 'Anade productos desde nuestras categorias o desde la seccion destacada.';
             if (addToCartModal) addToCartModal.style.display = 'none';
             if (modal) modal.classList.add('active');
             body.style.overflow = 'hidden';
@@ -417,9 +391,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (modalImg) modalImg.src = 'pulsera.jpg';
             if (modalCategoria) modalCategoria.textContent = 'Tu Carrito';
             if (modalNombre) modalNombre.textContent = cartCount + ' producto' + (cartCount > 1 ? 's' : '');
-            if (modalPrecio) modalPrecio.textContent = 'Total estimado: € ' + (cartCount * 1250).toLocaleString();
+            if (modalPrecio) modalPrecio.textContent = 'Total estimado: Bs ' + (cartCount * 1250).toLocaleString();
             const desc = document.querySelector('.modal-descripcion');
-            if (desc) desc.textContent = 'Tus joyas Soul te esperan. Finaliza tu pedido y las recibirás en 3-5 días hábiles.';
+            if (desc) desc.textContent = 'Tus joyas Soul te esperan. Finaliza tu pedido y las recibiras en 3-5 dias habiles.';
             if (addToCartModal) {
                 addToCartModal.style.display = 'inline-block';
                 addToCartModal.textContent = 'Finalizar Pedido';
@@ -442,6 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
             abrirCarrito();
         });
     }
+
     document.querySelectorAll('.footer-col ul li a').forEach(link => {
         link.addEventListener('click', function(e) {
             const texto = this.textContent.trim();
@@ -450,7 +425,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             e.preventDefault();
-            if (texto === 'Contacto' || texto === 'FAQ' || texto === 'Envíos' || texto === 'Cuidados') {
+            if (texto === 'Contacto' || texto === 'FAQ' || texto === 'Envios' || texto === 'Cuidados') {
                 const contactoSection = document.getElementById('contacto');
                 if (contactoSection) {
                     contactoSection.scrollIntoView({ behavior: 'smooth' });
@@ -461,5 +436,128 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    console.log(' Soul - Joyería con Alma cargada correctamente.');
+    const carruselWrapper = document.getElementById('carruselCategorias');
+    const gridCategorias = document.getElementById('gridCategorias');
+    const flechaPrev = document.getElementById('flechaPrev');
+    const flechaNext = document.getElementById('flechaNext');
+    const carruselDots = document.getElementById('carruselDots');
+
+    let currentIndex = 0;
+    let itemsPerView = 4;
+    let totalItems = document.querySelectorAll('.cat-item').length;
+    let startX = 0;
+    let isDragging = false;
+
+    function updateItemsPerView() {
+        itemsPerView = window.innerWidth <= 768 ? 1 : 4;
+        updateCarousel();
+        updateDots();
+        updateFlechas();
+    }
+
+    function getMaxIndex() {
+        return Math.max(0, totalItems - itemsPerView);
+    }
+
+    function updateCarousel() {
+        const itemWidth = gridCategorias.children[0].offsetWidth;
+        const gap = itemsPerView > 1 ? 24 : 16;
+        const offset = currentIndex * (itemWidth + gap);
+        gridCategorias.style.transform = `translateX(-${offset}px)`;
+    }
+
+    function updateDots() {
+        if (window.innerWidth <= 768) {
+            const maxIndex = getMaxIndex();
+            carruselDots.innerHTML = '';
+            for (let i = 0; i <= maxIndex; i++) {
+                const dot = document.createElement('span');
+                dot.classList.add('carrusel-dot');
+                if (i === currentIndex) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    currentIndex = i;
+                    updateCarousel();
+                    updateDots();
+                    updateFlechas();
+                });
+                carruselDots.appendChild(dot);
+            }
+        } else {
+            carruselDots.innerHTML = '';
+        }
+    }
+
+    function updateFlechas() {
+        const maxIndex = getMaxIndex();
+        if (currentIndex === 0) {
+            flechaPrev.classList.remove('visible');
+        } else {
+            flechaPrev.classList.add('visible');
+        }
+        if (currentIndex >= maxIndex) {
+            flechaNext.classList.remove('visible');
+        } else {
+            flechaNext.classList.add('visible');
+        }
+    }
+
+    flechaPrev.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateCarousel();
+            updateDots();
+            updateFlechas();
+        }
+    });
+
+    flechaNext.addEventListener('click', () => {
+        const maxIndex = getMaxIndex();
+        if (currentIndex < maxIndex) {
+            currentIndex++;
+            updateCarousel();
+            updateDots();
+            updateFlechas();
+        }
+    });
+
+    carruselWrapper.addEventListener('mouseenter', () => {
+        if (window.innerWidth > 768) {
+            updateFlechas();
+        }
+    });
+
+    carruselWrapper.addEventListener('mouseleave', () => {
+        flechaPrev.classList.remove('visible');
+        flechaNext.classList.remove('visible');
+    });
+
+    gridCategorias.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+    });
+
+    gridCategorias.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const diff = startX - e.touches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0 && currentIndex < getMaxIndex()) {
+                currentIndex++;
+            } else if (diff < 0 && currentIndex > 0) {
+                currentIndex--;
+            }
+            updateCarousel();
+            updateDots();
+            updateFlechas();
+            isDragging = false;
+        }
+    });
+
+    gridCategorias.addEventListener('touchend', () => {
+        isDragging = false;
+    });
+
+    window.addEventListener('resize', updateItemsPerView);
+    updateItemsPerView();
+
+    console.log('Soul - Joyeria con Alma cargada correctamente.');
 });
