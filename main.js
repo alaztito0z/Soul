@@ -436,68 +436,78 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    const gridCategorias = document.getElementById('gridCategorias');
-    const flechaPrev = document.getElementById('flechaPrev');
-    const flechaNext = document.getElementById('flechaNext');
-    const carruselDots = document.getElementById('carruselDots');
+    function initCarrusel() {
+        const gridCategorias = document.getElementById('gridCategorias');
+        const flechaPrev = document.getElementById('flechaPrev');
+        const flechaNext = document.getElementById('flechaNext');
+        const carruselDots = document.getElementById('carruselDots');
 
-    const catItems = document.querySelectorAll('.cat-item');
-    const totalItems = catItems.length;
-    let currentIndex = 0;
+        if (!gridCategorias || !flechaPrev || !flechaNext || !carruselDots) return;
 
-    function getPositionClass(index, current) {
-        const diff = index - current;
-        if (diff === 0) return 'centro';
-        if (diff === -1 || diff === totalItems - 1) return 'izquierda';
-        if (diff === 1 || diff === -(totalItems - 1)) return 'derecha';
-        if (diff < -1 || diff === totalItems - 1) return 'oculto-izquierda';
-        return 'oculto-derecha';
-    }
-
-    function updateCarousel() {
-        catItems.forEach((item, index) => {
-            item.className = 'cat-item';
-            const posClass = getPositionClass(index, currentIndex);
-            item.classList.add(posClass);
-        });
-        updateDots();
-    }
-
-    function updateDots() {
-        carruselDots.innerHTML = '';
-        for (let i = 0; i < totalItems; i++) {
-            const dot = document.createElement('span');
-            dot.classList.add('carrusel-dot');
-            if (i === currentIndex) dot.classList.add('active');
-            dot.addEventListener('click', () => {
-                currentIndex = i;
-                updateCarousel();
-            });
-            carruselDots.appendChild(dot);
-        }
-    }
-
-    flechaPrev.addEventListener('click', () => {
-        currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-        updateCarousel();
-    });
-
-    flechaNext.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % totalItems;
-        updateCarousel();
-    });
-
-    if (window.innerWidth <= 768) {
+        const catItems = gridCategorias.querySelectorAll('.cat-item');
+        const totalItems = catItems.length;
+        let currentIndex = 0;
         let startX = 0;
         let isDragging = false;
-        const wrapper = document.querySelector('.grid-categorias');
 
-        wrapper.addEventListener('touchstart', (e) => {
+        function getPositionClass(index, current) {
+            const diff = index - current;
+            if (diff === 0) return 'centro';
+            if (diff === -1 || diff === totalItems - 1) return 'izquierda';
+            if (diff === 1 || diff === -(totalItems - 1)) return 'derecha';
+            if (diff < -1) return 'oculto-izquierda';
+            return 'oculto-derecha';
+        }
+
+        function updateCarousel() {
+            if (window.innerWidth <= 768) {
+                const itemWidth = catItems[0].offsetWidth;
+                const gap = 16;
+                const offset = currentIndex * (itemWidth + gap);
+                gridCategorias.style.transform = 'translateX(-' + offset + 'px)';
+            } else {
+                gridCategorias.style.transform = 'translateX(0)';
+                catItems.forEach((item, index) => {
+                    item.className = 'cat-item';
+                    const posClass = getPositionClass(index, currentIndex);
+                    item.classList.add(posClass);
+                });
+            }
+            updateDots();
+        }
+
+        function updateDots() {
+            carruselDots.innerHTML = '';
+            for (let i = 0; i < totalItems; i++) {
+                const dot = document.createElement('span');
+                dot.classList.add('carrusel-dot');
+                if (i === currentIndex) dot.classList.add('active');
+                dot.addEventListener('click', function() {
+                    currentIndex = i;
+                    updateCarousel();
+                });
+                carruselDots.appendChild(dot);
+            }
+        }
+
+        flechaPrev.addEventListener('click', function() {
+            currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+            updateCarousel();
+        });
+
+        flechaNext.addEventListener('click', function() {
+            currentIndex = (currentIndex + 1) % totalItems;
+            updateCarousel();
+        });
+
+        gridCategorias.addEventListener('touchstart', function(e) {
+            if (window.innerWidth > 768) return;
             startX = e.touches[0].clientX;
             isDragging = true;
         });
 
-        wrapper.addEventListener('touchmove', (e) => {
+        gridCategorias.addEventListener('touchmove', function(e) {
+            if (window.innerWidth > 768) return;
             if (!isDragging) return;
             const diff = startX - e.touches[0].clientX;
             if (Math.abs(diff) > 50) {
@@ -511,12 +521,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        wrapper.addEventListener('touchend', () => {
+        gridCategorias.addEventListener('touchend', function() {
             isDragging = false;
         });
+
+        updateCarousel();
     }
 
-    updateCarousel();
+    setTimeout(initCarrusel, 200);
 
     console.log('Soul - Joyeria con Alma cargada correctamente.');
 });
