@@ -153,7 +153,6 @@ ul {
     margin-bottom: var(--spacing-lg);
     color: var(--color-dark);
     transition: color 0.5s ease;
-    letter-spacing: 2px;
 }
 
 .section-title.left {
@@ -179,8 +178,6 @@ ul {
     transition: all var(--transition);
     border: none;
     background: transparent;
-    position: relative;
-    overflow: hidden;
 }
 
 .btn-sm {
@@ -213,30 +210,9 @@ ul {
     color: var(--color-gold);
 }
 
-.btn-dorado::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-        45deg,
-        transparent 40%,
-        rgba(255,255,255,0.2) 50%,
-        transparent 60%
-    );
-    animation: btnShine 4s infinite;
-}
-
 .btn-dorado:hover {
     background-color: var(--color-gold);
     color: var(--color-white);
-}
-
-@keyframes btnShine {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
 }
 
 .destacado-actions {
@@ -288,13 +264,23 @@ ul {
 }
 
 @keyframes loaderFade {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 1;
+    }
 }
 
 @keyframes loaderLine {
-    0%, 100% { width: 60px; }
-    50% { width: 120px; }
+    0%,
+    100% {
+        width: 60px;
+    }
+    50% {
+        width: 120px;
+    }
 }
 
 .header {
@@ -479,7 +465,7 @@ body.dark .header.scrolled {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.3) 100%);
+    background: linear-gradient( to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.3) 100%);
 }
 
 .hero-content {
@@ -586,7 +572,7 @@ body.dark .header.scrolled {
     left: -100%;
     width: 50%;
     height: 100%;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient( to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0) 100%);
     transform: skewX(-25deg);
     transition: left 0.8s ease;
     pointer-events: none;
@@ -604,7 +590,7 @@ body.dark .header.scrolled {
     left: 0;
     width: 100%;
     padding: 2rem 1.5rem 1.5rem;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient( to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0) 100%);
     color: var(--color-white);
     z-index: 3;
     transition: all 0.4s ease;
@@ -697,22 +683,12 @@ body.dark .header.scrolled {
 .destacado-img {
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease;
-}
-
-.destacado-img:hover {
-    transform: perspective(1000px) rotateY(-3deg);
 }
 
 .destacado-img img {
     width: 100%;
     height: 500px;
     object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.destacado-img:hover img {
-    transform: scale(1.04);
 }
 
 .destacado-info {
@@ -752,22 +728,9 @@ body.dark .header.scrolled {
     text-align: center;
 }
 
-.esencia-item {
-    transition: transform 0.3s ease;
-}
-
-.esencia-item:hover {
-    transform: translateY(-8px);
-}
-
 .esencia-icono {
     color: var(--color-gold);
     margin-bottom: var(--spacing-sm);
-    transition: transform 0.3s ease;
-}
-
-.esencia-item:hover .esencia-icono {
-    transform: scale(1.1);
 }
 
 .esencia-icono svg {
@@ -789,71 +752,11 @@ body.dark .header.scrolled {
     line-height: 1.6;
 }
 
-.counter-section {
-    background-color: var(--color-dark);
-    padding: var(--spacing-lg) 0;
-    transition: background-color 0.5s ease;
-}
-
-.counter-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-md);
-    text-align: center;
-}
-
-.counter-item {
-    padding: var(--spacing-md);
-}
-
-.counter-number {
-    font-family: var(--font-serif);
-    font-size: 3.5rem;
-    color: var(--color-gold);
-    display: block;
-    margin-bottom: var(--spacing-xs);
-    transition: all 0.3s ease;
-}
-
-.counter-label {
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #999;
-}
-
 .testimonios {
     background-color: var(--color-dark);
     color: var(--color-white);
     text-align: center;
     transition: background-color 0.5s ease;
-}
-
-.testimonio-slider {
-    position: relative;
-    overflow: hidden;
-    min-height: 200px;
-}
-
-.testimonio-slide {
-    display: none;
-    text-align: center;
-    animation: slideFade 0.6s ease;
-}
-
-.testimonio-slide.active {
-    display: block;
-}
-
-@keyframes slideFade {
-    from {
-        opacity: 0;
-        transform: translateX(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
 }
 
 .testimonio-comillas {
@@ -871,36 +774,7 @@ body.dark .header.scrolled {
     font-weight: 400;
     line-height: 1.5;
     max-width: 700px;
-    margin: 0 auto var(--spacing-sm);
-}
-
-.testimonio-autor {
-    color: var(--color-gold);
-    font-size: 0.9rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-
-.testimonio-dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: var(--spacing-md);
-}
-
-.dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(184, 155, 114, 0.3);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.dot.active {
-    background: var(--color-gold);
-    width: 24px;
-    border-radius: 4px;
+    margin: 0 auto var(--spacing-md);
 }
 
 .testimonio-logo {
@@ -1206,7 +1080,6 @@ body.dark .header.scrolled {
     .hamburger {
         display: flex;
     }
-    
     .nav-menu {
         position: fixed;
         top: 0;
@@ -1222,20 +1095,16 @@ body.dark .header.scrolled {
         transition: right 0.4s ease;
         z-index: 1000;
     }
-    
     .nav-menu.active {
         right: 0;
     }
-    
     .nav-menu a {
         color: var(--color-dark);
         font-size: 1rem;
     }
-    
     .nav-menu a::after {
         background-color: var(--color-gold);
     }
-    
     .menu-overlay {
         position: fixed;
         top: 0;
@@ -1248,16 +1117,13 @@ body.dark .header.scrolled {
         visibility: hidden;
         transition: all var(--transition);
     }
-    
     .menu-overlay.active {
         opacity: 1;
         visibility: visible;
     }
-    
     .modal-grid {
         grid-template-columns: 1fr;
     }
-    
     .modal-img img {
         height: 250px;
     }
@@ -1267,83 +1133,59 @@ body.dark .header.scrolled {
     html {
         cursor: auto;
     }
-    
     .cursor,
     .cursor-dot {
         display: none;
     }
-    
     .hero-title {
         font-size: 3rem;
         letter-spacing: 6px;
     }
-    
     .hero-subtitle {
         font-size: 0.8rem;
         letter-spacing: 3px;
     }
-    
     .filosofia-texto {
         font-size: 1.2rem;
     }
-    
     .grid-categorias {
         grid-template-columns: repeat(2, 1fr);
         gap: 0.8rem;
     }
-    
     .cat-overlay {
         padding: 1.2rem 1rem 1rem;
     }
-    
     .cat-nombre {
         font-size: 1.1rem;
         letter-spacing: 1px;
     }
-    
     .cat-link {
         font-size: 0.6rem;
         letter-spacing: 2px;
     }
-    
     .destacado-grid,
     .contacto-grid {
         grid-template-columns: 1fr;
     }
-    
     .destacado-info {
         padding-left: 0;
         padding-top: var(--spacing-md);
     }
-    
     .destacado-img img {
         height: 350px;
     }
-    
-    .esencia-grid,
-    .counter-grid {
+    .esencia-grid {
         grid-template-columns: 1fr 1fr;
     }
-    
-    .counter-number {
-        font-size: 2.5rem;
-    }
-    
-    .testimonio-texto {
-        font-size: 1.4rem;
-    }
-    
     .footer-grid {
         grid-template-columns: 1fr 1fr;
     }
-    
     .scroll-top {
         bottom: 80px;
         right: 20px;
         width: 40px;
         height: 40px;
     }
-    
     .sound-toggle {
         bottom: 20px;
         right: 20px;
