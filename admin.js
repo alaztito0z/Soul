@@ -262,7 +262,7 @@ function renderPedidos(filter = 'todos') {
             <p>Email: ${p.cliente?.email || 'N/A'}</p>
             <p>Total: Bs ${(p.total || 0).toLocaleString()}</p>
             <p>Estado: ${p.estado || 'pendiente'}</p>
-            <p>Fecha: ${p.timestamp ? new Date(p.timestamp).toLocaleString() : 'N/A'}</p>
+            <p>Fecha: ${p.timestamp ? new Date(p.timestamp).toLocaleString('es-BO', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'N/A'}</p>
         </div>
     `).join('');
 }
