@@ -222,17 +222,26 @@ function bindProductoForm() {
     const cancelBtn = document.querySelector('#productoModal .btn-cancel');
 
     if (btnAdd) {
-        btnAdd.onclick = function() {
+        btnAdd.addEventListener('click', function() {
             document.getElementById('productoId').value = '';
             form.reset();
+            document.getElementById('prodActivo').checked = true;
             document.getElementById('modalTitle').textContent = 'Nuevo Producto';
             modal.classList.add('active');
-        };
+        });
     }
 
-    if (closeBtn) closeBtn.onclick = closeProductoModal;
-    if (cancelBtn) cancelBtn.onclick = closeProductoModal;
-    if (form) form.onsubmit = saveProducto;
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeProductoModal);
+    }
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', closeProductoModal);
+    }
+
+    if (form) {
+        form.addEventListener('submit', saveProducto);
+    }
 }
 
 function closeProductoModal() {
