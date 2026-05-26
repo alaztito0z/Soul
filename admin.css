@@ -614,6 +614,13 @@ body {
     border-color: var(--color-gold);
 }
 
+.pedidos-toolbar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
 .pedido-card {
     background: var(--color-card);
     padding: 1.5rem;
@@ -732,25 +739,47 @@ body {
 }
 
 .btn-exportar {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 24px;
-    background: var(--color-gold);
-    color: #0f0f0f;
-    border: none;
+    padding: 10px 20px;
+    background: transparent;
+    color: var(--color-gold);
+    border: 1px solid var(--color-gold);
     cursor: pointer;
     font-family: 'Montserrat', sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 500;
     letter-spacing: 1px;
     text-transform: uppercase;
-    margin-bottom: 1.5rem;
     transition: all 0.3s;
 }
 
 .btn-exportar:hover {
-    background: var(--color-gold-light);
+    background: var(--color-gold);
+    color: #0f0f0f;
+}
+
+.btn-eliminar-enviados {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+}
+
+.btn-eliminar-enviados:hover {
+    border-color: var(--color-danger);
+    color: var(--color-danger);
 }
 
 @media (max-width: 768px) {
@@ -796,25 +825,8 @@ body {
     .pedido-actions {
         flex-direction: column;
     }
-}
-.btn-eliminar-enviados {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    background: var(--color-danger);
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    transition: all 0.3s;
-}
 
-.btn-eliminar-enviados:hover {
-    background: #c0392b;
+    .pedidos-toolbar {
+        flex-direction: column;
+    }
 }
