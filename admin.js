@@ -61,11 +61,18 @@ document.getElementById('btnLogout').addEventListener('click', async () => {
     dashboard.style.display = 'none';
 });
 
+onAuthStateChanged(auth, (user) => {
+    if (!user && dashboard.style.display === 'flex') {
+        dashboard.style.display = 'none';
+        loginScreen.style.display = 'flex';
+    }
+});
+
 function initDashboard() {
     loadProductos();
     loadPedidos();
     setupNavigation();
-    bindProductoForm();
+    setupProductoForm();
     updateLastUpdate();
     setInterval(updateLastUpdate, 30000);
 }
@@ -214,7 +221,7 @@ function setupNavigation() {
     });
 }
 
-function bindProductoForm() {
+function setupProductoForm() {
     const btnAdd = document.getElementById('btnAddProducto');
     const modal = document.getElementById('productoModal');
     const form = document.getElementById('productoForm');
@@ -231,17 +238,9 @@ function bindProductoForm() {
         });
     }
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeProductoModal);
-    }
-
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', closeProductoModal);
-    }
-
-    if (form) {
-        form.addEventListener('submit', saveProducto);
-    }
+    if (closeBtn) closeBtn.addEventListener('click', closeProductoModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeProductoModal);
+    if (form) form.addEventListener('submit', saveProducto);
 }
 
 function closeProductoModal() {
@@ -328,14 +327,14 @@ function renderPedidos(filter = 'todos') {
     `).join('');
 
     document.querySelectorAll('.btn-confirmar').forEach(btn => {
-        btn.onclick = async () => {
+        btn.addEventListener('click', async () => {
             await updateDoc(doc(db, 'pedidos', btn.dataset.id), { estado: 'confirmado', confirmadoAt: new Date().toISOString() });
-        };
+        });
     });
     document.querySelectorAll('.btn-enviar').forEach(btn => {
-        btn.onclick = async () => {
+        btn.addEventListener('click', async () => {
             await updateDoc(doc(db, 'pedidos', btn.dataset.id), { estado: 'enviado', enviadoAt: new Date().toISOString() });
-        };
+        });
     });
 
     updateExportAndDeleteButtons(filter, true);
@@ -363,13 +362,13 @@ function updateExportAndDeleteButtons(estado, mostrar) {
         exportBtn.id = 'btnExportar';
         exportBtn.className = 'btn-exportar';
         exportBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Exportar a Hoja de Calculo`;
-        exportBtn.onclick = exportarEnviados;
+        exportBtn.addEventListener('click', exportarEnviados);
         
         const deleteBtn = document.createElement('button');
         deleteBtn.id = 'btnEliminarEnviados';
         deleteBtn.className = 'btn-eliminar-enviados';
         deleteBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Eliminar Todos los Enviados`;
-        deleteBtn.onclick = eliminarTodosEnviados;
+        deleteBtn.addEventListener('click', eliminarTodosEnviados);
         
         pedidosList.parentNode.insertBefore(deleteBtn, pedidosList);
         pedidosList.parentNode.insertBefore(exportBtn, pedidosList);
