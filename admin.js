@@ -23,23 +23,22 @@ const loginError = document.getElementById('loginError');
 let currentUser = null;
 let productos = [];
 let pedidos = [];
+let filtroPedidosActivo = 'todos';
 
-loginForm.addEventListener('submit', async(e) => {
+loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('adminEmail').value;
     const password = document.getElementById('adminPassword').value;
-
+    
     loginError.textContent = 'Conectando...';
     loginError.style.color = '#f39c12';
-
+    
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
         loginError.textContent = 'Verificando permisos...';
-
         const adminQuery = query(collection(db, 'admins'), where('uid', '==', userCredential.user.uid));
         const adminSnapshot = await getDocs(adminQuery);
-
+        
         if (!adminSnapshot.empty) {
             loginScreen.style.display = 'none';
             dashboard.style.display = 'flex';
@@ -53,11 +52,10 @@ loginForm.addEventListener('submit', async(e) => {
     } catch (error) {
         loginError.textContent = 'Error: ' + error.message;
         loginError.style.color = '#e74c3c';
-        console.error('Login error:', error);
     }
 });
 
-document.getElementById('btnLogout').addEventListener('click', async() => {
+document.getElementById('btnLogout').addEventListener('click', async () => {
     await signOut(auth);
     currentUser = null;
     loginScreen.style.display = 'flex';
@@ -97,12 +95,12 @@ function loadProductos() {
 function renderProductos(filter = '') {
     const tbody = document.getElementById('productosTableBody');
     const searchTerm = filter.toLowerCase();
-
-    const filtered = productos.filter(p =>
+    
+    const filtered = productos.filter(p => 
         (p.nombre || '').toLowerCase().includes(searchTerm) ||
         (p.categoria || '').toLowerCase().includes(searchTerm)
     );
-
+    
     tbody.innerHTML = filtered.map(p => `
         <tr>
             <td><img src="${p.imagen || ''}" class="table-img" alt="${p.nombre || ''}"></td>
@@ -147,14 +145,14 @@ async function saveProducto(e) {
         nombre: document.getElementById('prodNombre').value,
         categoria: document.getElementById('prodCategoria').value,
         precio: parseFloat(document.getElementById('prodPrecio').value),
-        precioAnterior: document.getElementById('prodPrecioAnterior').value ?
+        precioAnterior: document.getElementById('prodPrecioAnterior').value ? 
             parseFloat(document.getElementById('prodPrecioAnterior').value) : null,
         imagen: document.getElementById('prodImagen').value,
         descripcion: document.getElementById('prodDescripcion').value,
         activo: document.getElementById('prodActivo').checked,
         updatedAt: new Date().toISOString()
     };
-
+    
     try {
         if (id) {
             await updateDoc(doc(db, 'productos', id), productoData);
@@ -170,7 +168,7 @@ async function saveProducto(e) {
 function editProducto(id) {
     const producto = productos.find(p => p.id === id);
     if (!producto) return;
-
+    
     document.getElementById('productoId').value = id;
     document.getElementById('prodNombre').value = producto.nombre || '';
     document.getElementById('prodCategoria').value = producto.categoria || '';
@@ -179,7 +177,7 @@ function editProducto(id) {
     document.getElementById('prodImagen').value = producto.imagen || '';
     document.getElementById('prodDescripcion').value = producto.descripcion || '';
     document.getElementById('prodActivo').checked = producto.activo !== false;
-
+    
     document.getElementById('modalTitle').textContent = 'Editar Producto';
     document.getElementById('productoModal').classList.add('active');
 }
@@ -196,7 +194,7 @@ async function deleteProducto(id) {
 
 function updateLastUpdate() {
     const now = new Date();
-    document.getElementById('lastUpdate').textContent =
+    document.getElementById('lastUpdate').textContent = 
         `Actualizado: ${now.toLocaleTimeString()}`;
 }
 
@@ -205,17 +203,17 @@ function setupNavigation() {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
+            
             const section = btn.dataset.section;
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-
+            
             const sectionMap = {
                 'productos': 'sectionProductos',
                 'ofertas': 'sectionOfertas',
                 'pedidos': 'sectionPedidos',
                 'estadisticas': 'sectionEstadisticas'
             };
-
+            
             document.getElementById(sectionMap[section]).classList.add('active');
             document.getElementById('sectionTitle').textContent = btn.textContent.trim();
         });
@@ -229,7 +227,7 @@ function setupProductoForm() {
         document.getElementById('modalTitle').textContent = 'Nuevo Producto';
         document.getElementById('productoModal').classList.add('active');
     });
-
+    
     document.querySelector('#productoModal .modal-close').addEventListener('click', closeProductoModal);
     document.getElementById('productoForm').addEventListener('submit', saveProducto);
     document.querySelector('#productoModal .btn-cancel').addEventListener('click', closeProductoModal);
@@ -246,34 +244,148 @@ function loadPedidos() {
         snapshot.forEach((doc) => {
             pedidos.push({ id: doc.id, ...doc.data() });
         });
-        renderPedidos();
+        renderPedidos(filtroPedidosActivo);
         updatePedidosBadge();
     });
 }
 
 function renderPedidos(filter = 'todos') {
     const container = document.getElementById('pedidosList');
-    const filtered = filter === 'todos' ? pedidos : pedidos.filter(p => p.estado === filter);
-
+    let filtered = filter === 'todos' ? pedidos : pedidos.filter(p => p.estado === filter);
+    
+    if (filtered.length === 0) {
+        container.innerHTML = '<p style="color:#999;text-align:center;padding:3rem;">No hay pedidos en esta categoria</p>';
+        return;
+    }
+    
     container.innerHTML = filtered.map(p => `
         <div class="pedido-card">
-            <h3>Pedido #${p.id.slice(-6)}</h3>
-            <p>Cliente: ${p.cliente?.nombre || 'N/A'}</p>
-            <p>Email: ${p.cliente?.email || 'N/A'}</p>
-            <p>Total: Bs ${(p.total || 0).toLocaleString()}</p>
-            <p>Estado: ${p.estado || 'pendiente'}</p>
-            <p>Fecha: ${p.timestamp ? new Date(p.timestamp).toLocaleString('es-BO', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'N/A'}</p>
+            <div class="pedido-header">
+                <h3>Pedido #${p.id.slice(-6)}</h3>
+                <span class="pedido-estado estado-${p.estado || 'pendiente'}">${p.estado || 'pendiente'}</span>
+            </div>
+            <div class="pedido-body">
+                <div class="pedido-info">
+                    <p><strong>Cliente:</strong> ${p.cliente?.nombre || 'N/A'}</p>
+                    <p><strong>Email:</strong> ${p.cliente?.email || 'N/A'}</p>
+                    <p><strong>Total:</strong> Bs ${(p.total || 0).toLocaleString()}</p>
+                    <p><strong>Fecha:</strong> ${p.timestamp ? new Date(p.timestamp).toLocaleString('es-BO', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'N/A'}</p>
+                </div>
+                <div class="pedido-items">
+                    <h4>Productos:</h4>
+                    ${p.items ? p.items.map(i => `
+                        <div class="pedido-item">
+                            <span>${i.nombre} x${i.cantidad}</span>
+                            <span>Bs ${(i.subtotal || i.precio * i.cantidad).toLocaleString()}</span>
+                        </div>
+                    `).join('') : ''}
+                </div>
+            </div>
+            <div class="pedido-actions">
+                ${p.estado === 'pendiente' ? `
+                    <button class="btn-confirmar" data-id="${p.id}">Confirmar Pedido</button>
+                ` : ''}
+                ${p.estado === 'confirmado' ? `
+                    <button class="btn-enviar" data-id="${p.id}">Marcar como Enviado</button>
+                ` : ''}
+            </div>
         </div>
     `).join('');
+
+    document.querySelectorAll('.btn-confirmar').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            try {
+                await updateDoc(doc(db, 'pedidos', btn.dataset.id), {
+                    estado: 'confirmado'
+                });
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    });
+
+    document.querySelectorAll('.btn-enviar').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            try {
+                await updateDoc(doc(db, 'pedidos', btn.dataset.id), {
+                    estado: 'enviado'
+                });
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    });
 }
 
 document.querySelectorAll('.filtro-pedido').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.filtro-pedido').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        filtroPedidosActivo = btn.dataset.estado;
         renderPedidos(btn.dataset.estado);
+        updateExportButton(btn.dataset.estado);
     });
 });
+
+function updateExportButton(estado) {
+    let existingBtn = document.getElementById('btnExportar');
+    if (existingBtn) existingBtn.remove();
+    
+    if (estado === 'enviado') {
+        const exportBtn = document.createElement('button');
+        exportBtn.id = 'btnExportar';
+        exportBtn.className = 'btn-exportar';
+        exportBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Exportar a Hoja de Calculo
+        `;
+        exportBtn.addEventListener('click', exportarEnviados);
+        
+        const pedidosList = document.getElementById('pedidosList');
+        pedidosList.parentNode.insertBefore(exportBtn, pedidosList);
+    }
+}
+
+function exportarEnviados() {
+    const enviados = pedidos.filter(p => p.estado === 'enviado');
+    
+    if (enviados.length === 0) {
+        alert('No hay pedidos enviados para exportar');
+        return;
+    }
+    
+    let csv = 'ID Pedido,Fecha,Cliente,Email,Total,Estado\n';
+    
+    enviados.forEach(p => {
+        const fecha = p.timestamp ? new Date(p.timestamp).toLocaleDateString('es-BO') : 'N/A';
+        csv += `${p.id.slice(-6)},${fecha},${p.cliente?.nombre || 'N/A'},${p.cliente?.email || 'N/A'},Bs ${p.total},${p.estado}\n`;
+    });
+    
+    csv += '\n\nDetalle de Productos\n';
+    csv += 'ID Pedido,Producto,Cantidad,Precio Unitario,Subtotal\n';
+    
+    enviados.forEach(p => {
+        if (p.items) {
+            p.items.forEach(i => {
+                csv += `${p.id.slice(-6)},${i.nombre},${i.cantidad},Bs ${i.precio},Bs ${i.subtotal || i.precio * i.cantidad}\n`;
+            });
+        }
+    });
+    
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'pedidos_enviados_' + new Date().toISOString().slice(0, 10) + '.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 
 function updatePedidosBadge() {
     const pendientes = pedidos.filter(p => p.estado === 'pendiente').length;
@@ -284,9 +396,9 @@ function updateStats() {
     const ofertas = productos.filter(p => p.precioAnterior !== null);
     document.getElementById('ofertasActivas').textContent = ofertas.length;
     document.getElementById('productosEnOferta').textContent = ofertas.length;
-
-    const descuentoPromedio = ofertas.length > 0 ?
-        Math.round(ofertas.reduce((sum, p) => sum + (1 - p.precio / p.precioAnterior) * 100, 0) / ofertas.length) :
-        0;
+    
+    const descuentoPromedio = ofertas.length > 0 
+        ? Math.round(ofertas.reduce((sum, p) => sum + (1 - p.precio / p.precioAnterior) * 100, 0) / ofertas.length)
+        : 0;
     document.getElementById('descuentoPromedio').textContent = descuentoPromedio + '%';
 }
