@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -74,7 +74,6 @@ onAuthStateChanged(auth, (user) => {
 function initDashboard() {
     loadProductos();
     loadPedidos();
-    loadEstadisticas();
     setupNavigation();
     setupProductoForm();
     updateLastUpdate();
@@ -97,6 +96,7 @@ function loadProductos() {
 
 function renderProductos(filter = '') {
     const tbody = document.getElementById('productosTableBody');
+    if (!tbody) return;
     const searchTerm = filter.toLowerCase();
     
     const filtered = productos.filter(p => 
@@ -196,9 +196,10 @@ async function deleteProducto(id) {
 }
 
 function updateLastUpdate() {
+    const el = document.getElementById('lastUpdate');
+    if (!el) return;
     const now = new Date();
-    document.getElementById('lastUpdate').textContent = 
-        `Actualizado: ${now.toLocaleTimeString()}`;
+    el.textContent = 'Actualizado: ' + now.toLocaleTimeString();
 }
 
 function setupNavigation() {
@@ -217,8 +218,15 @@ function setupNavigation() {
                 'estadisticas': 'sectionEstadisticas'
             };
             
-            document.getElementById(sectionMap[section]).classList.add('active');
-            document.getElementById('sectionTitle').textContent = btn.textContent.trim();
+            const targetSection = document.getElementById(sectionMap[section]);
+            if (targetSection) targetSection.classList.add('active');
+            
+            const titleEl = document.getElementById('sectionTitle');
+            if (titleEl) titleEl.textContent = btn.textContent.trim();
+            
+            if (section === 'estadisticas') {
+                actualizarEstadisticasDOM();
+            }
         });
     });
 }
@@ -249,13 +257,10 @@ function loadPedidos() {
         });
         renderPedidos(filtroPedidosActivo);
         updatePedidosBadge();
-        calcularEstadisticas();
+        actualizarEstadisticasDOM();
     });
 }
 
-function loadEstadisticas() {
-    calcularEstadisticas();
-}
 function calcularEstadisticas() {
     const ahora = new Date();
     const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
@@ -267,26 +272,14 @@ function calcularEstadisticas() {
     });
     
     pedidosMes = pedidosDelMes.length;
-    
-    ventasMes = pedidosDelMes.reduce((total, p) => {
-        return total + (p.total || 0);
-    }, 0);
-    
-    const ventasMesEl = document.getElementById('ventasMes');
-    const pedidosMesEl = document.getElementById('pedidosMes');
-    
-    if (ventasMesEl) ventasMesEl.textContent = 'Bs ' + ventasMes.toLocaleString();
-    if (pedidosMesEl) pedidosMesEl.textContent = pedidosMes;
+    ventasMes = pedidosDelMes.reduce((total, p) => total + (p.total || 0), 0);
     
     const productosVendidos = {};
     pedidosDelMes.forEach(p => {
         if (p.items) {
             p.items.forEach(i => {
                 const nombre = i.nombre || 'Desconocido';
-                if (!productosVendidos[nombre]) {
-                    productosVendidos[nombre] = 0;
-                }
-                productosVendidos[nombre] += i.cantidad || 1;
+                productosVendidos[nombre] = (productosVendidos[nombre] || 0) + (i.cantidad || 1);
             });
         }
     });
@@ -295,13 +288,25 @@ function calcularEstadisticas() {
         .sort((a, b) => b[1] - a[1])
         .slice(0, 5);
     
+    return { pedidosMes, ventasMes, topProductos };
+}
+
+function actualizarEstadisticasDOM() {
+    const stats = calcularEstadisticas();
+    
+    const ventasMesEl = document.getElementById('ventasMes');
+    const pedidosMesEl = document.getElementById('pedidosMes');
     const topContainer = document.getElementById('topProductos');
+    
+    if (ventasMesEl) ventasMesEl.textContent = 'Bs ' + stats.ventasMes.toLocaleString();
+    if (pedidosMesEl) pedidosMesEl.textContent = stats.pedidosMes;
+    
     if (topContainer) {
-        if (topProductos.length === 0) {
+        if (stats.topProductos.length === 0) {
             topContainer.innerHTML = '<p style="color:#999;">Sin ventas este mes</p>';
         } else {
-            topContainer.innerHTML = topProductos.map((item, index) => 
-                `<p>${index + 1}. ${item[0]} - ${item[1]} vendido${item[1] > 1 ? 's' : ''}</p>`
+            topContainer.innerHTML = stats.topProductos.map((item, index) => 
+                '<p>' + (index + 1) + '. ' + item[0] + ' - ' + item[1] + ' vendido' + (item[1] > 1 ? 's' : '') + '</p>'
             ).join('');
         }
     }
@@ -309,11 +314,13 @@ function calcularEstadisticas() {
 
 function renderPedidos(filter = 'todos') {
     const container = document.getElementById('pedidosList');
+    if (!container) return;
+    
     let filtered = filter === 'todos' ? pedidos : pedidos.filter(p => p.estado === filter);
     
     if (filtered.length === 0) {
         container.innerHTML = '<p style="color:#999;text-align:center;padding:3rem;">No hay pedidos en esta categoria</p>';
-        updateExportButton(filter, false);
+        updateExportAndDeleteButtons(filter, false);
         return;
     }
     
@@ -377,7 +384,7 @@ function renderPedidos(filter = 'todos') {
         });
     });
 
-    updateExportButton(filter, filtered.length > 0);
+    updateExportAndDeleteButtons(filter, true);
 }
 
 document.querySelectorAll('.filtro-pedido').forEach(btn => {
@@ -389,11 +396,15 @@ document.querySelectorAll('.filtro-pedido').forEach(btn => {
     });
 });
 
-function updateExportButton(estado, mostrar) {
-    let existingBtn = document.getElementById('btnExportar');
-    if (existingBtn) existingBtn.remove();
+function updateExportAndDeleteButtons(estado, mostrar) {
+    let existingExportBtn = document.getElementById('btnExportar');
+    let existingDeleteBtn = document.getElementById('btnEliminarEnviados');
+    if (existingExportBtn) existingExportBtn.remove();
+    if (existingDeleteBtn) existingDeleteBtn.remove();
     
     if (estado === 'enviado' && mostrar) {
+        const pedidosList = document.getElementById('pedidosList');
+        
         const exportBtn = document.createElement('button');
         exportBtn.id = 'btnExportar';
         exportBtn.className = 'btn-exportar';
@@ -407,8 +418,44 @@ function updateExportButton(estado, mostrar) {
         `;
         exportBtn.addEventListener('click', exportarEnviados);
         
-        const pedidosList = document.getElementById('pedidosList');
+        const deleteBtn = document.createElement('button');
+        deleteBtn.id = 'btnEliminarEnviados';
+        deleteBtn.className = 'btn-eliminar-enviados';
+        deleteBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+            Eliminar Todos los Enviados
+        `;
+        deleteBtn.addEventListener('click', eliminarTodosEnviados);
+        
+        pedidosList.parentNode.insertBefore(deleteBtn, pedidosList);
         pedidosList.parentNode.insertBefore(exportBtn, pedidosList);
+    }
+}
+
+async function eliminarTodosEnviados() {
+    const enviados = pedidos.filter(p => p.estado === 'enviado');
+    
+    if (enviados.length === 0) {
+        alert('No hay pedidos enviados para eliminar');
+        return;
+    }
+    
+    if (!confirm('Estas seguro de eliminar ' + enviados.length + ' pedidos enviados? Esta accion no se puede deshacer.')) {
+        return;
+    }
+    
+    try {
+        const batch = writeBatch(db);
+        enviados.forEach(p => {
+            batch.delete(doc(db, 'pedidos', p.id));
+        });
+        await batch.commit();
+        alert(enviados.length + ' pedidos eliminados correctamente');
+    } catch (error) {
+        alert('Error al eliminar: ' + error.message);
     }
 }
 
@@ -450,17 +497,23 @@ function exportarEnviados() {
 }
 
 function updatePedidosBadge() {
+    const badge = document.getElementById('pedidosPendientes');
+    if (!badge) return;
     const pendientes = pedidos.filter(p => p.estado === 'pendiente').length;
-    document.getElementById('pedidosPendientes').textContent = pendientes;
+    badge.textContent = pendientes;
 }
 
 function updateStats() {
     const ofertas = productos.filter(p => p.precioAnterior !== null);
-    document.getElementById('ofertasActivas').textContent = ofertas.length;
-    document.getElementById('productosEnOferta').textContent = ofertas.length;
+    const ofertasActivasEl = document.getElementById('ofertasActivas');
+    const productosEnOfertaEl = document.getElementById('productosEnOferta');
+    const descuentoPromedioEl = document.getElementById('descuentoPromedio');
+    
+    if (ofertasActivasEl) ofertasActivasEl.textContent = ofertas.length;
+    if (productosEnOfertaEl) productosEnOfertaEl.textContent = ofertas.length;
     
     const descuentoPromedio = ofertas.length > 0 
         ? Math.round(ofertas.reduce((sum, p) => sum + (1 - p.precio / p.precioAnterior) * 100, 0) / ofertas.length)
         : 0;
-    document.getElementById('descuentoPromedio').textContent = descuentoPromedio + '%';
+    if (descuentoPromedioEl) descuentoPromedioEl.textContent = descuentoPromedio + '%';
 }
