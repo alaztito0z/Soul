@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul - Administracion</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <h1 class="login-logo">SOUL</h1>
+            <p class="login-subtitle">Panel de Administracion</p>
+            <form id="loginForm">
+                <input type="email" id="adminEmail" placeholder="Email" required>
+                <input type="password" id="adminPassword" placeholder="Contrasena" required>
+                <button type="submit" class="btn-login">Acceder</button>
+            </form>
+            <p id="loginError" class="error-msg"></p>
+        </div>
+    </div>
+
+    <div id="dashboard" class="dashboard" style="display:none;">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>SOUL</h2>
+                <span>Admin</span>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-section="productos">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                        <line x1="7" y1="7" x2="7.01" y2="7"/>
+                    </svg>
+                    Productos
+                </button>
+                <button class="nav-btn" data-section="ofertas">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    Ofertas
+                </button>
+                <button class="nav-btn" data-section="pedidos">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                    Pedidos
+                    <span id="pedidosPendientes" class="badge">0</span>
+                </button>
+                <button class="nav-btn" data-section="estadisticas">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    Estadisticas
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="btnLogout" class="btn-logout">Cerrar Sesion</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <h1 id="sectionTitle">Gestion de Productos</h1>
+                </div>
+                <div class="header-right">
+                    <span class="live-indicator">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="10"/>
+                        </svg>
+                        En vivo
+                    </span>
+                    <span id="lastUpdate" class="last-update"></span>
+                </div>
+            </header>
+
+            <section id="sectionProductos" class="content-section active">
+                <div class="toolbar">
+                    <input type="text" id="searchProducto" placeholder="Buscar producto..." class="search-input">
+                    <button id="btnAddProducto" class="btn-add">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Nuevo Producto
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Categoria</th>
+                                <th>Precio</th>
+                                <th>Oferta</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productosTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="sectionOfertas" class="content-section">
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <h3>Ofertas Activas</h3>
+                        <p id="ofertasActivas">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Productos en Oferta</h3>
+                        <p id="productosEnOferta">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Descuento Promedio</h3>
+                        <p id="descuentoPromedio">0%</p>
+                    </div>
+                </div>
+                <div id="ofertasList" class="ofertas-list"></div>
+            </section>
+
+            <section id="sectionPedidos" class="content-section">
+                <div class="pedidos-filtros">
+                    <button class="filtro-pedido active" data-estado="todos">Todos</button>
+                    <button class="filtro-pedido" data-estado="pendiente">Pendientes</button>
+                    <button class="filtro-pedido" data-estado="confirmado">Confirmados</button>
+                    <button class="filtro-pedido" data-estado="enviado">Enviados</button>
+                </div>
+                <div id="pedidosList" class="pedidos-list"></div>
+            </section>
+
+            <section id="sectionEstadisticas" class="content-section">
+                <div class="stats-grid">
+                    <div class="stat-card large">
+                        <h3>Ventas del Mes</h3>
+                        <p id="ventasMes">0 Bs</p>
+                    </div>
+                    <div class="stat-card large">
+                        <h3>Pedidos del Mes</h3>
+                        <p id="pedidosMes">0</p>
+                    </div>
+                    <div class="stat-card large">
+                        <h3>Productos Mas Vendidos</h3>
+                        <div id="topProductos"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="productoModal" class="admin-modal">
+        <div class="modal-content">
+            <button class="modal-close">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <h2 id="modalTitle">Nuevo Producto</h2>
+            <form id="productoForm">
+                <input type="hidden" id="productoId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nombre del Producto</label>
+                        <input type="text" id="prodNombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select id="prodCategoria" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="anillos">Anillos</option>
+                            <option value="aretes">Aretes</option>
+                            <option value="collares">Collares</option>
+                            <option value="relojes">Relojes</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Precio (Bs)</label>
+                        <input type="number" id="prodPrecio" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Precio Anterior (oferta)</label>
+                        <input type="number" id="prodPrecioAnterior" step="0.01">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Imagen</label>
+                    <input type="text" id="prodImagen" placeholder="ej: anillo-01.jpg" required>
+                </div>
+                <div class="form-group">
+                    <label>Descripcion</label>
+                    <textarea id="prodDescripcion" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="prodActivo" checked> Producto activo
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn-save">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="admin.js"></script>
+</body>
+
+</html>
