@@ -256,7 +256,6 @@ function loadPedidos() {
 function loadEstadisticas() {
     calcularEstadisticas();
 }
-
 function calcularEstadisticas() {
     const ahora = new Date();
     const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
@@ -273,8 +272,11 @@ function calcularEstadisticas() {
         return total + (p.total || 0);
     }, 0);
     
-    document.getElementById('ventasMes').textContent = 'Bs ' + ventasMes.toLocaleString();
-    document.getElementById('pedidosMes').textContent = pedidosMes;
+    const ventasMesEl = document.getElementById('ventasMes');
+    const pedidosMesEl = document.getElementById('pedidosMes');
+    
+    if (ventasMesEl) ventasMesEl.textContent = 'Bs ' + ventasMes.toLocaleString();
+    if (pedidosMesEl) pedidosMesEl.textContent = pedidosMes;
     
     const productosVendidos = {};
     pedidosDelMes.forEach(p => {
@@ -294,12 +296,14 @@ function calcularEstadisticas() {
         .slice(0, 5);
     
     const topContainer = document.getElementById('topProductos');
-    if (topProductos.length === 0) {
-        topContainer.innerHTML = '<p style="color:#999;">Sin ventas este mes</p>';
-    } else {
-        topContainer.innerHTML = topProductos.map((item, index) => 
-            `<p>${index + 1}. ${item[0]} - ${item[1]} vendido${item[1] > 1 ? 's' : ''}</p>`
-        ).join('');
+    if (topContainer) {
+        if (topProductos.length === 0) {
+            topContainer.innerHTML = '<p style="color:#999;">Sin ventas este mes</p>';
+        } else {
+            topContainer.innerHTML = topProductos.map((item, index) => 
+                `<p>${index + 1}. ${item[0]} - ${item[1]} vendido${item[1] > 1 ? 's' : ''}</p>`
+            ).join('');
+        }
     }
 }
 
