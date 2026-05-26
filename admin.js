@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, where, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -24,6 +24,8 @@ let currentUser = null;
 let productos = [];
 let pedidos = [];
 let filtroPedidosActivo = 'todos';
+let ventasMes = 0;
+let pedidosMes = 0;
 
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -72,6 +74,7 @@ onAuthStateChanged(auth, (user) => {
 function initDashboard() {
     loadProductos();
     loadPedidos();
+    loadEstadisticas();
     setupNavigation();
     setupProductoForm();
     updateLastUpdate();
@@ -246,7 +249,58 @@ function loadPedidos() {
         });
         renderPedidos(filtroPedidosActivo);
         updatePedidosBadge();
+        calcularEstadisticas();
     });
+}
+
+function loadEstadisticas() {
+    calcularEstadisticas();
+}
+
+function calcularEstadisticas() {
+    const ahora = new Date();
+    const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
+    
+    const pedidosDelMes = pedidos.filter(p => {
+        if (!p.timestamp) return false;
+        const fechaPedido = new Date(p.timestamp);
+        return fechaPedido >= inicioMes;
+    });
+    
+    pedidosMes = pedidosDelMes.length;
+    
+    ventasMes = pedidosDelMes.reduce((total, p) => {
+        return total + (p.total || 0);
+    }, 0);
+    
+    document.getElementById('ventasMes').textContent = 'Bs ' + ventasMes.toLocaleString();
+    document.getElementById('pedidosMes').textContent = pedidosMes;
+    
+    const productosVendidos = {};
+    pedidosDelMes.forEach(p => {
+        if (p.items) {
+            p.items.forEach(i => {
+                const nombre = i.nombre || 'Desconocido';
+                if (!productosVendidos[nombre]) {
+                    productosVendidos[nombre] = 0;
+                }
+                productosVendidos[nombre] += i.cantidad || 1;
+            });
+        }
+    });
+    
+    const topProductos = Object.entries(productosVendidos)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+    
+    const topContainer = document.getElementById('topProductos');
+    if (topProductos.length === 0) {
+        topContainer.innerHTML = '<p style="color:#999;">Sin ventas este mes</p>';
+    } else {
+        topContainer.innerHTML = topProductos.map((item, index) => 
+            `<p>${index + 1}. ${item[0]} - ${item[1]} vendido${item[1] > 1 ? 's' : ''}</p>`
+        ).join('');
+    }
 }
 
 function renderPedidos(filter = 'todos') {
@@ -255,6 +309,7 @@ function renderPedidos(filter = 'todos') {
     
     if (filtered.length === 0) {
         container.innerHTML = '<p style="color:#999;text-align:center;padding:3rem;">No hay pedidos en esta categoria</p>';
+        updateExportButton(filter, false);
         return;
     }
     
@@ -296,7 +351,8 @@ function renderPedidos(filter = 'todos') {
         btn.addEventListener('click', async () => {
             try {
                 await updateDoc(doc(db, 'pedidos', btn.dataset.id), {
-                    estado: 'confirmado'
+                    estado: 'confirmado',
+                    confirmadoAt: new Date().toISOString()
                 });
             } catch (error) {
                 alert('Error: ' + error.message);
@@ -308,13 +364,16 @@ function renderPedidos(filter = 'todos') {
         btn.addEventListener('click', async () => {
             try {
                 await updateDoc(doc(db, 'pedidos', btn.dataset.id), {
-                    estado: 'enviado'
+                    estado: 'enviado',
+                    enviadoAt: new Date().toISOString()
                 });
             } catch (error) {
                 alert('Error: ' + error.message);
             }
         });
     });
+
+    updateExportButton(filter, filtered.length > 0);
 }
 
 document.querySelectorAll('.filtro-pedido').forEach(btn => {
@@ -323,15 +382,14 @@ document.querySelectorAll('.filtro-pedido').forEach(btn => {
         btn.classList.add('active');
         filtroPedidosActivo = btn.dataset.estado;
         renderPedidos(btn.dataset.estado);
-        updateExportButton(btn.dataset.estado);
     });
 });
 
-function updateExportButton(estado) {
+function updateExportButton(estado, mostrar) {
     let existingBtn = document.getElementById('btnExportar');
     if (existingBtn) existingBtn.remove();
     
-    if (estado === 'enviado') {
+    if (estado === 'enviado' && mostrar) {
         const exportBtn = document.createElement('button');
         exportBtn.id = 'btnExportar';
         exportBtn.className = 'btn-exportar';
