@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     items: itemsPedido,
                     total: total,
                     estado: 'pendiente',
-                    timestamp: serverTimestamp(),
+                   timestamp: new Date().toISOString(),
                     cliente: {
                         nombre: '',
                         email: '',
