@@ -153,6 +153,7 @@ ul {
     margin-bottom: var(--spacing-lg);
     color: var(--color-dark);
     transition: color 0.5s ease;
+    letter-spacing: 2px;
 }
 
 .section-title.left {
@@ -178,6 +179,8 @@ ul {
     transition: all var(--transition);
     border: none;
     background: transparent;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-sm {
@@ -210,9 +213,30 @@ ul {
     color: var(--color-gold);
 }
 
+.btn-dorado::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 40%,
+        rgba(255,255,255,0.2) 50%,
+        transparent 60%
+    );
+    animation: btnShine 4s infinite;
+}
+
 .btn-dorado:hover {
     background-color: var(--color-gold);
     color: var(--color-white);
+}
+
+@keyframes btnShine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
 }
 
 .destacado-actions {
@@ -264,23 +288,13 @@ ul {
 }
 
 @keyframes loaderFade {
-    0%,
-    100% {
-        opacity: 0.4;
-    }
-    50% {
-        opacity: 1;
-    }
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
 }
 
 @keyframes loaderLine {
-    0%,
-    100% {
-        width: 60px;
-    }
-    50% {
-        width: 120px;
-    }
+    0%, 100% { width: 60px; }
+    50% { width: 120px; }
 }
 
 .header {
@@ -465,7 +479,7 @@ body.dark .header.scrolled {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient( to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.3) 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.3) 100%);
 }
 
 .hero-content {
@@ -535,7 +549,7 @@ body.dark .header.scrolled {
 .grid-categorias {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-sm);
+    gap: 1.5rem;
 }
 
 .cat-item {
@@ -543,17 +557,27 @@ body.dark .header.scrolled {
     overflow: hidden;
     cursor: pointer;
     aspect-ratio: 3 / 4;
+    border-radius: 2px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.cat-item:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
 }
 
 .cat-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s ease;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: brightness(0.9);
 }
 
 .cat-item:hover .cat-img {
-    transform: scale(1.08);
+    transform: scale(1.06);
+    filter: brightness(1.05);
 }
 
 .cat-shine {
@@ -562,9 +586,9 @@ body.dark .header.scrolled {
     left: -100%;
     width: 50%;
     height: 100%;
-    background: linear-gradient( to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0) 100%);
     transform: skewX(-25deg);
-    transition: left 0s;
+    transition: left 0.8s ease;
     pointer-events: none;
     z-index: 2;
 }
@@ -572,7 +596,6 @@ body.dark .header.scrolled {
 .cat-item:hover .cat-shine,
 .destacado-img:hover .cat-shine {
     left: 150%;
-    transition: left 0.8s ease;
 }
 
 .cat-overlay {
@@ -580,35 +603,83 @@ body.dark .header.scrolled {
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: var(--spacing-md);
-    background: linear-gradient( to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+    padding: 2rem 1.5rem 1.5rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0) 100%);
     color: var(--color-white);
     z-index: 3;
+    transition: all 0.4s ease;
+}
+
+.cat-item:hover .cat-overlay {
+    padding-bottom: 2rem;
 }
 
 .cat-nombre {
     font-family: var(--font-serif);
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 400;
-    margin-bottom: var(--spacing-xs);
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.cat-item:hover .cat-nombre {
+    letter-spacing: 3px;
 }
 
 .cat-link {
     font-family: var(--font-sans);
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 500;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--color-gold);
     opacity: 0;
-    transform: translateY(10px);
-    transition: all var(--transition);
+    transform: translateY(8px);
+    transition: all 0.4s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cat-link::after {
+    content: '';
     display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--color-gold);
+    transition: width 0.3s ease;
 }
 
 .cat-item:hover .cat-link {
     opacity: 1;
     transform: translateY(0);
+}
+
+.cat-item:hover .cat-link::after {
+    width: 30px;
+}
+
+.cat-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--color-gold);
+    color: #0f0f0f;
+    padding: 6px 12px;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    z-index: 4;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.4s ease;
+}
+
+.cat-item:hover .cat-badge {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .destacado {
@@ -626,12 +697,22 @@ body.dark .header.scrolled {
 .destacado-img {
     position: relative;
     overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.destacado-img:hover {
+    transform: perspective(1000px) rotateY(-3deg);
 }
 
 .destacado-img img {
     width: 100%;
     height: 500px;
     object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.destacado-img:hover img {
+    transform: scale(1.04);
 }
 
 .destacado-info {
@@ -671,9 +752,22 @@ body.dark .header.scrolled {
     text-align: center;
 }
 
+.esencia-item {
+    transition: transform 0.3s ease;
+}
+
+.esencia-item:hover {
+    transform: translateY(-8px);
+}
+
 .esencia-icono {
     color: var(--color-gold);
     margin-bottom: var(--spacing-sm);
+    transition: transform 0.3s ease;
+}
+
+.esencia-item:hover .esencia-icono {
+    transform: scale(1.1);
 }
 
 .esencia-icono svg {
@@ -695,11 +789,71 @@ body.dark .header.scrolled {
     line-height: 1.6;
 }
 
+.counter-section {
+    background-color: var(--color-dark);
+    padding: var(--spacing-lg) 0;
+    transition: background-color 0.5s ease;
+}
+
+.counter-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+    text-align: center;
+}
+
+.counter-item {
+    padding: var(--spacing-md);
+}
+
+.counter-number {
+    font-family: var(--font-serif);
+    font-size: 3.5rem;
+    color: var(--color-gold);
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    transition: all 0.3s ease;
+}
+
+.counter-label {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #999;
+}
+
 .testimonios {
     background-color: var(--color-dark);
     color: var(--color-white);
     text-align: center;
     transition: background-color 0.5s ease;
+}
+
+.testimonio-slider {
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+}
+
+.testimonio-slide {
+    display: none;
+    text-align: center;
+    animation: slideFade 0.6s ease;
+}
+
+.testimonio-slide.active {
+    display: block;
+}
+
+@keyframes slideFade {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .testimonio-comillas {
@@ -717,7 +871,36 @@ body.dark .header.scrolled {
     font-weight: 400;
     line-height: 1.5;
     max-width: 700px;
-    margin: 0 auto var(--spacing-md);
+    margin: 0 auto var(--spacing-sm);
+}
+
+.testimonio-autor {
+    color: var(--color-gold);
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.testimonio-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: var(--spacing-md);
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(184, 155, 114, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: var(--color-gold);
+    width: 24px;
+    border-radius: 4px;
 }
 
 .testimonio-logo {
@@ -1023,6 +1206,7 @@ body.dark .header.scrolled {
     .hamburger {
         display: flex;
     }
+    
     .nav-menu {
         position: fixed;
         top: 0;
@@ -1038,16 +1222,20 @@ body.dark .header.scrolled {
         transition: right 0.4s ease;
         z-index: 1000;
     }
+    
     .nav-menu.active {
         right: 0;
     }
+    
     .nav-menu a {
         color: var(--color-dark);
         font-size: 1rem;
     }
+    
     .nav-menu a::after {
         background-color: var(--color-gold);
     }
+    
     .menu-overlay {
         position: fixed;
         top: 0;
@@ -1060,13 +1248,16 @@ body.dark .header.scrolled {
         visibility: hidden;
         transition: all var(--transition);
     }
+    
     .menu-overlay.active {
         opacity: 1;
         visibility: visible;
     }
+    
     .modal-grid {
         grid-template-columns: 1fr;
     }
+    
     .modal-img img {
         height: 250px;
     }
@@ -1076,47 +1267,83 @@ body.dark .header.scrolled {
     html {
         cursor: auto;
     }
+    
     .cursor,
     .cursor-dot {
         display: none;
     }
+    
     .hero-title {
         font-size: 3rem;
         letter-spacing: 6px;
     }
+    
     .hero-subtitle {
         font-size: 0.8rem;
         letter-spacing: 3px;
     }
+    
     .filosofia-texto {
         font-size: 1.2rem;
     }
+    
     .grid-categorias {
         grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
     }
+    
+    .cat-overlay {
+        padding: 1.2rem 1rem 1rem;
+    }
+    
+    .cat-nombre {
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+    }
+    
+    .cat-link {
+        font-size: 0.6rem;
+        letter-spacing: 2px;
+    }
+    
     .destacado-grid,
     .contacto-grid {
         grid-template-columns: 1fr;
     }
+    
     .destacado-info {
         padding-left: 0;
         padding-top: var(--spacing-md);
     }
+    
     .destacado-img img {
         height: 350px;
     }
-    .esencia-grid {
+    
+    .esencia-grid,
+    .counter-grid {
         grid-template-columns: 1fr 1fr;
     }
+    
+    .counter-number {
+        font-size: 2.5rem;
+    }
+    
+    .testimonio-texto {
+        font-size: 1.4rem;
+    }
+    
     .footer-grid {
         grid-template-columns: 1fr 1fr;
     }
+    
     .scroll-top {
         bottom: 80px;
         right: 20px;
         width: 40px;
         height: 40px;
     }
+    
     .sound-toggle {
         bottom: 20px;
         right: 20px;
