@@ -465,7 +465,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (window.innerWidth <= 768) {
                 const itemWidth = catItems[0].offsetWidth;
                 const gap = 16;
-                const offset = currentIndex * (itemWidth + gap);
+                const wrapperWidth = gridCategorias.parentElement.offsetWidth;
+                const centerOffset = (wrapperWidth - itemWidth) / 2;
+                const offset = currentIndex * (itemWidth + gap) - centerOffset;
                 gridCategorias.style.transform = 'translateX(-' + offset + 'px)';
             } else {
                 gridCategorias.style.transform = 'translateX(0)';
