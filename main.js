@@ -128,17 +128,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const ambientSound = document.getElementById('ambientSound');
     let soundOn = false;
 
-    soundToggle.addEventListener('click', function() {
-        if (!soundOn) {
-            ambientSound.play().catch(() => {});
-            soundIcon.textContent = '🔊';
-            soundOn = true;
-        } else {
-            ambientSound.pause();
-            soundIcon.textContent = '🔇';
-            soundOn = false;
-        }
-    });
+    if (soundToggle) {
+        soundToggle.addEventListener('click', function() {
+            if (!soundOn) {
+                ambientSound.play().catch(() => {});
+                soundIcon.textContent = '🔊';
+                soundOn = true;
+            } else {
+                ambientSound.pause();
+                soundIcon.textContent = '🔇';
+                soundOn = false;
+            }
+        });
+    }
 
     const cartCountEl = document.querySelector('.cart-count');
     const stickyCart = document.getElementById('stickyCart');
